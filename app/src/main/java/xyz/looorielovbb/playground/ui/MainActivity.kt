@@ -1,4 +1,4 @@
-package xyz.looorielovbb.playground
+package xyz.looorielovbb.playground.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
