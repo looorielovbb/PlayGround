@@ -5,7 +5,7 @@ import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "articles")
-data class Article(
+data class Article  @JvmOverloads constructor(
     @PrimaryKey
     val id: Int,
     val adminAdd: Boolean,
@@ -41,8 +41,5 @@ data class Article(
     val userId: Int,
     val visible: Int,
     val zan: Int,
-
-){
-
-    @Ignore var tags: List<String> = arrayListOf()
-}
+    @Ignore val tags: List<String> = listOf()
+)
