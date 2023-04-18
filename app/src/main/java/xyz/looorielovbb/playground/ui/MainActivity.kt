@@ -1,56 +1,45 @@
 package xyz.looorielovbb.playground.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.ActivityMainBinding
+import xyz.looorielovbb.playground.ext.binding
 import xyz.looorielovbb.playground.ui.favorite.FavFragment
 import xyz.looorielovbb.playground.ui.home.HomeFragment
 import xyz.looorielovbb.playground.ui.user.UserFragment
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var fragments: List<Fragment>
-
-    companion object {
-        const val TAG = "MainActivity"
+    private val binding by binding(ActivityMainBinding::inflate)
+    private val fragments: Array<Fragment> by lazy {
+        arrayOf(HomeFragment(), FavFragment(), UserFragment())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        fragments = arrayListOf(HomeFragment(), FavFragment(), UserFragment())
         with(binding) {
-            Log.d(TAG, "onCreate: ")
-            viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            viewpager2.adapter = object : FragmentStateAdapter(this@MainActivity) {
-                override fun getItemCount(): Int {
-                    return fragments.size
+            with(viewpager2) {
+                orientation = ViewPager2.ORIENTATION_HORIZONTAL
+                offscreenPageLimit = 3
+                adapter = object : FragmentStateAdapter(this@MainActivity) {
+                    override fun getItemCount() = fragments.size
+                    override fun createFragment(position: Int) = fragments[position]
                 }
-
-                override fun createFragment(position: Int): Fragment {
-                    return fragments[position]
-                }
-
+                registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                    override fun onPageSelected(position: Int) =
+                        when (position) {
+                            0 -> bottomNavi.selectedItemId = R.id.home
+                            1 -> bottomNavi.selectedItemId = R.id.fav
+                            2 -> bottomNavi.selectedItemId = R.id.user
+                            else -> {}
+                        }
+                })
             }
-            viewpager2.offscreenPageLimit = 3
-            viewpager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-                override fun onPageSelected(position: Int) {
-                    super.onPageSelected(position)
-                    when (position) {
-                        0 -> bottomNavi.selectedItemId = R.id.home
-                        1 -> bottomNavi.selectedItemId = R.id.fav
-                        2 -> bottomNavi.selectedItemId = R.id.user
-                    }
-                }
-            })
-            viewpager2.currentItem = 0
+
             bottomNavi.setOnItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.home -> {
@@ -71,9 +60,7 @@ class MainActivity : AppCompatActivity() {
                     else -> false
                 }
             }
-
         }
     }
-
 
 }
