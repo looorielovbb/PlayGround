@@ -7,5 +7,5 @@ data class ListResp<T>(
     val over: Boolean,
     val pageCount: Int,
     val size: Int,
-    val total: Long,
+    val total: Int,
 )

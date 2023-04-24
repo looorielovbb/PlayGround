@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import dagger.hilt.android.AndroidEntryPoint
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.ActivityMainBinding
 import xyz.looorielovbb.playground.ext.binding
@@ -12,6 +13,7 @@ import xyz.looorielovbb.playground.ui.favorite.FavFragment
 import xyz.looorielovbb.playground.ui.home.HomeFragment
 import xyz.looorielovbb.playground.ui.user.UserFragment
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val binding by binding(ActivityMainBinding::inflate)

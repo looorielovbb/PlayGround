@@ -6,6 +6,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import xyz.looorielovbb.playground.data.remote.WanApi
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -20,10 +22,13 @@ class NetWorkModule {
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .baseUrl(BASE_URL)
+            .baseUrl(WanApi.BASE_URL)
             .build()
 
-    companion object {
-        private const val BASE_URL = "https://www.wanandroid.com/"
+    @Provides
+    @Singleton
+    fun bindCreate(retrofit: Retrofit): WanApi {
+        return retrofit.create(WanApi::class.java)
     }
+
 }
