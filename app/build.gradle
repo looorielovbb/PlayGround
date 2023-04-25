@@ -52,6 +52,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.6.1"
 
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+
     //data Store
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 
@@ -75,7 +77,7 @@ dependencies {
 
 
     //OKHttp Interceptor
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11'
     //retrofit2
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     // JSON Converter
