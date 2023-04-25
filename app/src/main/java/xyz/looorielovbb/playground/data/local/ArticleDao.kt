@@ -1,5 +1,6 @@
 package xyz.looorielovbb.playground.data.local
 
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -16,8 +17,15 @@ interface ArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertArticle(article: Article)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(list:List<Article>)
+
+    @Query("SELECT * FROM articles WHERE id LIKE :id")
+    fun articlePagingSource(id: Int): PagingSource<Int, Article>
+
     @Query("SELECT * FROM articles WHERE id = :id")
     fun getArticleById(id: String): Flow<Article>
 
-
+    @Query("DELETE FROM articles")
+    suspend fun clearAllArticles()
 }

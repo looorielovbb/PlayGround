@@ -14,16 +14,8 @@ class HomeAdapter :
     PagingDataAdapter<Article, HomeAdapter.ArticleViewHolder>(diffCallback = diffCallback) {
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-        val article = getItem(position)
-        article?.let {
-            with(holder.binding) {
-                title.text = it.title
-                date.text = it.niceDate
-                publishAt.text = it.publishTime.toString()
-                author.text = it.author.ifEmpty { it.shareUser.ifEmpty { "" } }
-            }
-        }
-
+        val item = getItem(position)
+        holder.bind(item)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
@@ -34,7 +26,19 @@ class HomeAdapter :
 
 
     class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
         val binding = ItemArticleBinding.bind(itemView)
+        fun bind(item: Article?) {
+            item?.let {
+                with(binding) {
+                    title.text = it.title
+                    date.text = it.niceDate
+                    publishAt.text = it.publishTime.toString()
+                    author.text = it.author.ifEmpty { it.shareUser.ifEmpty { "" } }
+                }
+            }
+        }
+
 
     }
 
@@ -46,9 +50,6 @@ class HomeAdapter :
             override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
                 oldItem == newItem
         }
-
-        private const val ITEM_TYPE_HEADER = 99
-        private const val ITEM_TYPE_FOOTER = 100
     }
 }
 

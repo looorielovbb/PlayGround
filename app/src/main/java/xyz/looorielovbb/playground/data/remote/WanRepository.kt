@@ -17,7 +17,6 @@ class WanRepository @Inject constructor(
         ).flow
     }
 
-
     companion object {
         const val NETWORK_PAGE_SIZE = 10
     }

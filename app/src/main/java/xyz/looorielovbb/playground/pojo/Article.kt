@@ -41,5 +41,9 @@ data class Article  @JvmOverloads constructor(
     val userId: Int,
     val visible: Int,
     val zan: Int,
-    @Ignore val tags: List<String> = listOf()
+    @Ignore val tags: List<Tag> = listOf()
+)
+data class Tag(
+    val name: String,
+    val url: String
 )
