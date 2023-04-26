@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -64,33 +64,26 @@ dependencies {
     implementation 'com.google.dagger:hilt-android:2.45'
     kapt 'com.google.dagger:hilt-compiler:2.45'
 
-    implementation "androidx.paging:paging-runtime:3.1.1"
-
-    def room_version = "2.5.1"
     //Room Database
+    def room_version = "2.5.1"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    // optional - Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:$room_version"
-    // optional - Paging 3 Integration
     implementation("androidx.room:room-paging:$room_version")
+    implementation "androidx.paging:paging-runtime:3.1.1"
 
-
-    //OKHttp Interceptor
+    def retrofit = "2.9.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11'
-    //retrofit2
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    // JSON Converter
-    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-moshi:$retrofit"
+    def moshi = "1.14.0"
+    implementation "com.squareup.moshi:moshi:$moshi"
+    implementation "com.squareup.moshi:moshi-kotlin:$moshi"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
     //Kotlinx Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
-
-
-    //Glide
-    //implementation 'com.github.bumptech.glide:glide:4.15.1'
-    //kapt 'com.github.bumptech.glide:compiler:4.15.1'
 
     //Coil图片加载
     implementation 'io.coil-kt:coil:2.3.0'

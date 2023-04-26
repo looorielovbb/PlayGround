@@ -5,7 +5,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import xyz.looorielovbb.playground.pojo.Article
 import xyz.looorielovbb.playground.pojo.Base
-import xyz.looorielovbb.playground.pojo.ListResp
+import xyz.looorielovbb.playground.pojo.ListData
 
 interface WanApi {
     companion object {
@@ -16,7 +16,7 @@ interface WanApi {
     suspend fun getArticles(
         @Path("page") page: Int,
         @Query("page_size") pageSize: Int
-    ): Base<ListResp<Article>>
+    ): Base<ListData<Article>>
 
 
 }

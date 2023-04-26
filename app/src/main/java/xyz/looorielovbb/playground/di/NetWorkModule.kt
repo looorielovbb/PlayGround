@@ -8,8 +8,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import xyz.looorielovbb.playground.data.remote.WanApi
+import xyz.looorielovbb.playground.ext.MoshiEx.moshi
 import javax.inject.Singleton
 
 @Module
@@ -17,7 +18,8 @@ import javax.inject.Singleton
 class NetWorkModule {
 
     @Provides
-    fun provideOkHttp(): OkHttpClient =
+    @Singleton
+    fun bindClient(): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor())
             .build()
@@ -30,9 +32,10 @@ class NetWorkModule {
             .addConverterFactory(gsonConverter)
             .baseUrl(WanApi.BASE_URL)
             .build()
+
     @Provides
     @Singleton
-    fun bindGsonConverter(): Converter.Factory = GsonConverterFactory.create()
+    fun bindConverter(): Converter.Factory = MoshiConverterFactory.create(moshi)
 
     @Provides
     @Singleton

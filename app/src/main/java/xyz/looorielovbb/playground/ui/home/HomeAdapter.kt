@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.ItemArticleBinding
+import xyz.looorielovbb.playground.ext.toDateStr
 import xyz.looorielovbb.playground.pojo.Article
 
 class HomeAdapter :
@@ -24,7 +25,6 @@ class HomeAdapter :
         )
     }
 
-
     class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         val binding = ItemArticleBinding.bind(itemView)
@@ -32,14 +32,14 @@ class HomeAdapter :
             item?.let {
                 with(binding) {
                     title.text = it.title
-                    date.text = it.niceDate
-                    publishAt.text = it.publishTime.toString()
-                    author.text = it.author.ifEmpty { it.shareUser.ifEmpty { "" } }
+                    publishAt.text =
+                        String.format("发布时间:%s", it.publishTime.toDateStr("yyyy-MM-dd"))
+                    val af = if (it.author.isNotEmpty()) "作者:%s" else "分享人:%s"
+                    author.text =
+                        String.format(af, it.author.ifEmpty { it.shareUser.ifEmpty { "" } })
                 }
             }
         }
-
-
     }
 
     companion object {

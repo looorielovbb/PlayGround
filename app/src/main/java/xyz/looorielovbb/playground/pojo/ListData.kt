@@ -1,6 +1,6 @@
 package xyz.looorielovbb.playground.pojo
 
-data class ListResp<T>(
+data class ListData<T>(
     val curPage: Int,
     val datas: List<T>,
     val offset: Int,
