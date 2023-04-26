@@ -1,14 +1,18 @@
 package xyz.looorielovbb.playground.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
@@ -36,26 +40,24 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         with(binding) {
             recyclerView.adapter = pagingAdapter
             recyclerView.layoutManager = layoutManager
+
             recyclerView.addItemDecoration(dividerItemDecoration)
             swiper.setOnRefreshListener {
-                viewModel.forceUpdate()
                 viewLifecycleOwner.lifecycleScope.launch {
                     delay(2000)
                     swiper.isRefreshing = false
                 }
             }
         }
-        viewModel.listData.observe(viewLifecycleOwner) {
-            pagingAdapter.submitData(lifecycle = lifecycle, pagingData = it)
-        }
 
 
-        /* viewLifecycleOwner.lifecycleScope.launch {
+
+         viewLifecycleOwner.lifecycleScope.launch {
              viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                  Log.d(TAG, "onViewCreated:STARTED ")
                  viewModel.flowData.collectLatest(pagingAdapter::submitData)
              }
-         }*/
+         }
     }
 
 }
