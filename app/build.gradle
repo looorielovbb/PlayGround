@@ -19,6 +19,15 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('../looorielovbb.jks')
+            storePassword '080539'
+            keyAlias 'private_key'
+            keyPassword '080539'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -29,6 +38,7 @@ android {
         debug {
             versionNameSuffix 'debug'
             minifyEnabled false
+            signingConfig signingConfigs.debug
         }
     }
     compileOptions {
@@ -41,6 +51,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    flavorDimensions 'test'
 }
 
 dependencies {
