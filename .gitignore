@@ -9,3 +9,6 @@
 local.properties
 gradlew.bat
 gradlew
+*.apk
+/app/release/*
+/app/debug/*
