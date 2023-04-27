@@ -29,7 +29,7 @@ class BindingViewHolder<VB : ViewBinding>(val binding: VB) : RecyclerView.ViewHo
 }
 
 fun <T> OnItemClickListener<T>.onItemClick(holder: RecyclerView.ViewHolder, block: (Int) -> T) =
-    onItemClick(block(holder.adapterPosition), holder.adapterPosition)
+    onItemClick(block(holder.bindingAdapterPosition), holder.bindingAdapterPosition)
 
 fun interface OnItemClickListener<T> {
     fun onItemClick(item: T, position: Int)

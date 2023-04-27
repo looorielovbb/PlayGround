@@ -20,7 +20,7 @@ interface ArticleDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(list:List<Article>)
 
-    @Query("SELECT * FROM articles WHERE id LIKE :id")
+    @Query("SELECT * FROM articles WHERE id = :id")
     fun articlePagingSource(id: Int): PagingSource<Int, Article>
 
     @Query("SELECT * FROM articles WHERE id = :id")

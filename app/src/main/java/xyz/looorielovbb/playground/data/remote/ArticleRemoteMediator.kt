@@ -11,7 +11,7 @@ import xyz.looorielovbb.playground.pojo.Article
 import java.io.IOException
 import javax.inject.Inject
 
-@ExperimentalPagingApi
+@OptIn(ExperimentalPagingApi::class)
 class ArticleRemoteMediator @Inject constructor(
     private val db: AppDatabase,
     private val wanApi: WanApi

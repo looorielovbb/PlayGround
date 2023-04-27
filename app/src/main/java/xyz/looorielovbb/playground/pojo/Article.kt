@@ -1,11 +1,10 @@
 package xyz.looorielovbb.playground.pojo
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "articles")
-data class Article  @JvmOverloads constructor(
+data class Article constructor(
     @PrimaryKey
     val id: Int,
     val adminAdd: Boolean,
@@ -41,7 +40,7 @@ data class Article  @JvmOverloads constructor(
     val userId: Int,
     val visible: Int,
     val zan: Int,
-    @Ignore val tags: List<Tag> = listOf()
+    val tags: List<Tag>
 )
 data class Tag(
     val name: String,

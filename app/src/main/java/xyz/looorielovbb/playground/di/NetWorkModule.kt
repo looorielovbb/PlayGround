@@ -21,15 +21,17 @@ class NetWorkModule {
     @Singleton
     fun bindClient(): OkHttpClient =
         OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor())
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                setLevel(HttpLoggingInterceptor.Level.BASIC)
+            })
             .build()
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, gsonConverter: Converter.Factory): Retrofit =
+    fun provideRetrofit(okHttpClient: OkHttpClient, converter: Converter.Factory): Retrofit =
         Retrofit.Builder()
             .client(okHttpClient)
-            .addConverterFactory(gsonConverter)
+            .addConverterFactory(converter)
             .baseUrl(WanApi.BASE_URL)
             .build()
 

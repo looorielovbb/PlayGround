@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -51,7 +52,6 @@ android {
     buildFeatures {
         viewBinding true
     }
-    flavorDimensions 'test'
 }
 
 dependencies {
@@ -78,10 +78,10 @@ dependencies {
     //Room Database
     def room_version = "2.5.1"
     implementation "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    ksp "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation("androidx.room:room-paging:$room_version")
-    implementation "androidx.paging:paging-runtime:3.1.1"
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
 
     def retrofit = "2.9.0"
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11'
@@ -90,7 +90,7 @@ dependencies {
     def moshi = "1.14.0"
     implementation "com.squareup.moshi:moshi:$moshi"
     implementation "com.squareup.moshi:moshi-kotlin:$moshi"
-    kapt "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
+    ksp "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
     //Kotlinx Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
