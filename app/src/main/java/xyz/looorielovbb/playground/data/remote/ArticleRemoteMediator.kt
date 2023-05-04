@@ -26,16 +26,17 @@ class ArticleRemoteMediator @Inject constructor(
                 LoadType.REFRESH -> null
                 LoadType.PREPEND ->
                     return MediatorResult.Success(endOfPaginationReached = true)
+
                 LoadType.APPEND -> {
-                    val lastItem = state.lastItemOrNull()
+                    state.lastItemOrNull()
                         ?: return MediatorResult.Success(
                             endOfPaginationReached = true
                         )
-                    lastItem.id
+                    state.anchorPosition
                 }
             }
             val response = wanApi.getArticles(
-                page = 0, pageSize = 10
+                page = loadKey ?: 0, pageSize = state.config.pageSize
             )
             val dao = db.articleDao()
             db.withTransaction {

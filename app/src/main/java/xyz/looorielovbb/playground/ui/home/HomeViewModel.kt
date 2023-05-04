@@ -8,7 +8,7 @@ import xyz.looorielovbb.playground.data.remote.WanRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(wanRepository: WanRepository) : ViewModel() {
-
+class HomeViewModel @Inject constructor(private val wanRepository: WanRepository) : ViewModel() {
     val flowData = wanRepository.fetchArticles().cachedIn(viewModelScope)
+
 }

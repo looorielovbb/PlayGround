@@ -7,9 +7,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
@@ -32,23 +32,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         with(binding) {
             recyclerView.adapter = pagingAdapter
             recyclerView.layoutManager = layoutManager
-
             recyclerView.addItemDecoration(dividerItemDecoration)
             swiper.setOnRefreshListener {
-                viewLifecycleOwner.lifecycleScope.launch {
-                    delay(2000)
-                    swiper.isRefreshing = false
-                }
             }
         }
 
-
-
-         viewLifecycleOwner.lifecycleScope.launch {
-             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                 viewModel.flowData.collectLatest(pagingAdapter::submitData)
-             }
-         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.flowData.collectLatest (pagingAdapter::submitData)
+            }
+            pagingAdapter.loadStateFlow.collectLatest {
+                when(it.source.refresh){
+                    is LoadState.Loading-> binding.swiper.isRefreshing=true
+//                    is LoadState.Error -> Toast.makeText(context,it.source.re,Toast.LENGTH_SHORT)
+                    is LoadState.NotLoading->binding.swiper.isRefreshing=false
+                    else -> {
+                        binding.swiper.isRefreshing=false
+                    }
+                }
+            }
+        }
     }
 
 }
