@@ -10,7 +10,7 @@ import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import xyz.looorielovbb.playground.data.remote.WanApi
-import xyz.looorielovbb.playground.ext.MoshiEx.moshi
+import xyz.looorielovbb.playground.utils.MoshiEx.moshi
 import javax.inject.Singleton
 
 @Module

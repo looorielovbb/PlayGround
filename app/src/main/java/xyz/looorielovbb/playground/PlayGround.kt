@@ -4,13 +4,13 @@ import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
-class App : Application() {
+class PlayGround : Application() {
     override fun onCreate() {
         super.onCreate()
-        instance = this
+        application = this
     }
 
     companion object {
-        lateinit var instance: App
+        lateinit var application: PlayGround
     }
 }

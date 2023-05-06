@@ -1,4 +1,4 @@
-package xyz.looorielovbb.playground.ext
+package xyz.looorielovbb.playground.utils
 
 import android.util.Log
 import com.squareup.moshi.Moshi
