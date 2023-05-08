@@ -24,6 +24,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var pagingAdapter: HomeDelegateAdapter
 
+    companion object {
+//        const val TAG = "HomeFragment"
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         pagingAdapter = HomeDelegateAdapter()
@@ -33,21 +37,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             recyclerView.adapter = pagingAdapter
             recyclerView.layoutManager = layoutManager
             recyclerView.addItemDecoration(dividerItemDecoration)
+            swiper.setOnRefreshListener {
+                pagingAdapter.refresh()
+            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.flowData.collectLatest (pagingAdapter::submitData)
+                viewModel.flowData.collectLatest(pagingAdapter::submitData)
             }
-            pagingAdapter.loadStateFlow.collectLatest {
-                when(it.source.refresh){
-                    is LoadState.Loading-> binding.swiper.isRefreshing=true
+        }
 
-//                    is LoadState.Error -> Toast.makeText(context,it.source.re,Toast.LENGTH_SHORT)
-                    is LoadState.NotLoading->binding.swiper.isRefreshing=false
-                    else -> {
-                        binding.swiper.isRefreshing=false
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            pagingAdapter.loadStateFlow.collectLatest {
+                when (it.refresh) {
+                    is LoadState.Loading -> binding.swiper.isRefreshing = true
+                    is LoadState.Error -> binding.swiper.isRefreshing = false
+                    is LoadState.NotLoading -> binding.swiper.isRefreshing = false
+                }
+                when (it.append) {
+                    is LoadState.Loading -> binding.bar.visibility = View.VISIBLE
+                    is LoadState.Error -> binding.bar.visibility = View.GONE
+                    is LoadState.NotLoading -> binding.bar.visibility = View.GONE
                 }
             }
         }

@@ -11,9 +11,6 @@ class HomeDelegateAdapter : BindingViewDelegate<Article, ItemArticleBinding>(
 
     override fun onBindViewHolder(binding: ItemArticleBinding, position: Int) {
         val item = getItem(position)
-        item?.apply {
-
-        }
         item?.let {
             val leftTitle = if (it.author.isNotEmpty()) "作者:%s" else "分享人:%s"
             with(binding) {
