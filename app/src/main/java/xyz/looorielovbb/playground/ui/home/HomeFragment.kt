@@ -44,24 +44,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.flowData.collectLatest(pagingAdapter::submitData)
+                launch {
+                    pagingAdapter.loadStateFlow.collectLatest {
+                        when (it.refresh) {
+                            is LoadState.Loading -> binding.swiper.isRefreshing = true
+                            is LoadState.Error -> binding.swiper.isRefreshing = false
+                            is LoadState.NotLoading -> binding.swiper.isRefreshing = false
+                        }
+                        when (it.append) {
+                            is LoadState.Loading -> binding.bar.visibility = View.VISIBLE
+                            is LoadState.Error -> binding.bar.visibility = View.GONE
+                            is LoadState.NotLoading -> binding.bar.visibility = View.GONE
+                        }
+                    }
+                }
+                launch {
+                    viewModel.flowData.collectLatest(pagingAdapter::submitData)
+                }
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launch {
-            pagingAdapter.loadStateFlow.collectLatest {
-                when (it.refresh) {
-                    is LoadState.Loading -> binding.swiper.isRefreshing = true
-                    is LoadState.Error -> binding.swiper.isRefreshing = false
-                    is LoadState.NotLoading -> binding.swiper.isRefreshing = false
-                }
-                when (it.append) {
-                    is LoadState.Loading -> binding.bar.visibility = View.VISIBLE
-                    is LoadState.Error -> binding.bar.visibility = View.GONE
-                    is LoadState.NotLoading -> binding.bar.visibility = View.GONE
-                }
-            }
-        }
     }
 
 }
