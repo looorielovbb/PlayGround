@@ -9,13 +9,13 @@ import xyz.looorielovbb.playground.pojo.Article
 import javax.inject.Inject
 
 class WanRepository @Inject constructor(
-    private val wanApi: WanApi
+    private val wanApiService: WanApiService
 ) {
     fun fetchArticles(): Flow<PagingData<Article>> {
         Log.d(TAG, "fetchArticles: ")
         return Pager(
             config = PagingConfig(enablePlaceholders = false, pageSize = NETWORK_PAGE_SIZE),
-            pagingSourceFactory = { ArticlesPagingSource(wanApi) }
+            pagingSourceFactory = { ArticlesPagingSource(wanApiService) }
         ).flow
     }
 

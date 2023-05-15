@@ -7,7 +7,7 @@ import xyz.looorielovbb.playground.pojo.Article
 import xyz.looorielovbb.playground.pojo.Base
 import xyz.looorielovbb.playground.pojo.ListData
 
-interface WanApi {
+interface WanApiService {
     companion object {
         const val BASE_URL = "https://www.wanandroid.com/"
     }

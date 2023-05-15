@@ -9,7 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import xyz.looorielovbb.playground.data.remote.WanApi
+import xyz.looorielovbb.playground.data.remote.WanApiService
 import xyz.looorielovbb.playground.utils.MoshiEx.moshi
 import javax.inject.Singleton
 
@@ -32,7 +32,7 @@ class NetWorkModule {
         Retrofit.Builder()
             .client(okHttpClient)
             .addConverterFactory(converter)
-            .baseUrl(WanApi.BASE_URL)
+            .baseUrl(WanApiService.BASE_URL)
             .build()
 
     @Provides
@@ -41,7 +41,7 @@ class NetWorkModule {
 
     @Provides
     @Singleton
-    fun bindCreate(retrofit: Retrofit): WanApi =
-        retrofit.create(WanApi::class.java)
+    fun bindCreate(retrofit: Retrofit): WanApiService =
+        retrofit.create(WanApiService::class.java)
 
 }

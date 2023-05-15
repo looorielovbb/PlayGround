@@ -14,7 +14,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalPagingApi::class)
 class ArticleRemoteMediator @Inject constructor(
     private val db: AppDatabase,
-    private val wanApi: WanApi
+    private val wanApiService: WanApiService
 ) : RemoteMediator<Int, Article>() {
 
     override suspend fun load(
@@ -35,7 +35,7 @@ class ArticleRemoteMediator @Inject constructor(
                     state.anchorPosition
                 }
             }
-            val response = wanApi.getArticles(
+            val response = wanApiService.getArticles(
                 page = loadKey ?: 0, pageSize = state.config.pageSize
             )
             val dao = db.articleDao()

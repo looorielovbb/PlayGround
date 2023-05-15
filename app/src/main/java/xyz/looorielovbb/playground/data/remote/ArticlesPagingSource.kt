@@ -10,7 +10,7 @@ import java.io.IOException
 private const val STARTING_PAGE_INDEX = 0
 
 class ArticlesPagingSource(
-    private val wanApiService: WanApi,
+    private val wanApiService: WanApiService,
 ) : PagingSource<Int, Article>() {
 
     companion object{

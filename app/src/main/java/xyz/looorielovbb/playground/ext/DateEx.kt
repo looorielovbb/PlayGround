@@ -120,7 +120,6 @@ fun Long.getDateSecond(): Int {
  * @param pattern 时间样式 yyyy-MM-dd HH:mm:ss
  * @return [String] 时间字符串
  */
-
 fun Long.toDateStr(pattern: String = "yyyy-MM-dd HH:mm:ss"): String {
     val date = Date(this)
     val format = SimpleDateFormat(pattern, Locale.getDefault())
@@ -250,7 +249,9 @@ fun Long.isToday(): Boolean {
  */
 fun Long.isYesterday(): Boolean {
     val yesterday = curTime.getNextDay(-1)
-    return getDateYear() == yesterday.getDateYear() && getDateMonth() == yesterday.getDateMonth() && getDateDay() == yesterday.getDateDay()
+    return getDateYear() == yesterday.getDateYear()
+            && getDateMonth() == yesterday.getDateMonth()
+            && getDateDay() == yesterday.getDateDay()
 }
 
 /**
