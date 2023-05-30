@@ -29,7 +29,6 @@ data class Article constructor(
     val projectLink: String,
     val publishTime: Long,
     val realSuperChapterId: Int,
-    val route: Boolean,
     val selfVisible: Int,
     val shareDate: Long,
     val shareUser: String,
