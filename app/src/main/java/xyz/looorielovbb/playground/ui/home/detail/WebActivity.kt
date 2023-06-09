@@ -6,7 +6,6 @@ import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.webkit.SslErrorHandler
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -39,7 +38,6 @@ class WebActivity : AppCompatActivity() {
             }
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             val link: String = intent.getStringExtra("link") ?: ""
-            Log.d(TAG, "link: ${link}")
             if (TextUtils.isEmpty(link)) {
                 Toast.makeText(this@WebActivity, "地址为空", Toast.LENGTH_LONG).show()
             }
@@ -104,10 +102,6 @@ class WebActivity : AppCompatActivity() {
 
         override fun onProgressChanged(webView: WebView?, process: Int) {
             super.onProgressChanged(webView, process)
-            if (process == 100) {
-                //加载完成
-                Log.d(TAG, "onProgressChanged: 加载完成")
-            }
         }
     }
 
@@ -154,7 +148,4 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        const val TAG = "WebActivity"
-    }
 }
