@@ -1,11 +1,15 @@
 package xyz.looorielovbb.playground.ui.home.detail
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.webkit.GeolocationPermissions
 import android.webkit.SslErrorHandler
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -41,27 +45,27 @@ class WebActivity : AppCompatActivity() {
             if (TextUtils.isEmpty(link)) {
                 Toast.makeText(this@WebActivity, "地址为空", Toast.LENGTH_LONG).show()
             }
+            WebView.setWebContentsDebuggingEnabled(true)
             webView.webChromeClient = mWebChromeClient
             webView.webViewClient = mWebViewClient
             webView.settings.apply {
+
                 javaScriptEnabled = true
-                mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                mixedContentMode = WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE
                 blockNetworkImage = false
+                blockNetworkLoads = false
                 defaultTextEncodingName = "UTF-8"
-                javaScriptEnabled = true
                 javaScriptCanOpenWindowsAutomatically = true
                 //适应手机屏幕
                 useWideViewPort = true
                 loadWithOverviewMode = true
                 layoutAlgorithm = WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING
-                //无限放大
+                //允许缩放
                 setSupportZoom(false)
                 builtInZoomControls = false
                 setGeolocationEnabled(true)
                 domStorageEnabled = true
                 cacheMode = WebSettings.LOAD_DEFAULT
-                // 不使用缓存
-                mixedContentMode = WebSettings.LOAD_NO_CACHE
                 // 添加user-agent
                 /*userAgentString =
                     "Mozilla/5.0 (Linux; Android 5.0; SM-N9100 Build/LRX21V) > " +
@@ -97,11 +101,66 @@ class WebActivity : AppCompatActivity() {
             back: ValueCallback<Array<Uri>>?,
             chooser: FileChooserParams?
         ): Boolean {
-            return super.onShowFileChooser(webView, back, chooser)
+            return true
         }
 
         override fun onProgressChanged(webView: WebView?, process: Int) {
             super.onProgressChanged(webView, process)
+        }
+
+        override fun onGeolocationPermissionsShowPrompt(
+            origin: String?,
+            callback: GeolocationPermissions.Callback?
+        ) {
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            ) {
+                val dialog = AlertDialog.Builder(this@WebActivity)
+                    .setTitle("温馨提示")
+                    .setMessage("当前网页正在请求定位")
+                    .setPositiveButton(
+                        "授权"
+                    ) { _, _ ->
+                        requestPermissions(
+                            arrayOf(
+                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION
+                            ), PERMISSION_REQUEST_GEO_LOCATION
+                        )
+                    }
+                    .create()
+                dialog.show()
+            }
+
+        }
+
+        override fun onGeolocationPermissionsHidePrompt() {
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_REQUEST_GEO_LOCATION -> {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {//COARSE_LOCATION 粗略的位置
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("提示")
+                    builder.setMessage("粗略位置权限授权失败。")
+                    builder.setPositiveButton("好的", null)
+                    builder.show()
+                }
+                if (grantResults[1] != PackageManager.PERMISSION_GRANTED) {//FINE_LOCATION 精确的位置
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("提示")
+                    builder.setMessage("精确位置权限授权失败。")
+                    builder.setPositiveButton("好的", null)
+                    builder.show()
+                }
+            }
         }
     }
 
@@ -124,7 +183,7 @@ class WebActivity : AppCompatActivity() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
-            return super.shouldOverrideUrlLoading(view, request)
+            return false
         }
 
         @SuppressLint("WebViewClientOnReceivedSslError")
@@ -133,11 +192,11 @@ class WebActivity : AppCompatActivity() {
             handler: SslErrorHandler?,
             error: SslError?
         ) {
-            super.onReceivedSslError(webView, handler, error)
             //忽略ssl错误
             handler?.proceed()
         }
     }
+
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -146,6 +205,10 @@ class WebActivity : AppCompatActivity() {
         } else {
             finish()
         }
+    }
+
+    companion object {
+        const val PERMISSION_REQUEST_GEO_LOCATION = 0x01
     }
 
 }
