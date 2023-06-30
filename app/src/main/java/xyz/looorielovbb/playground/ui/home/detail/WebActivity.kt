@@ -9,6 +9,7 @@ import android.net.http.SslError
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.webkit.GeolocationPermissions
 import android.webkit.SslErrorHandler
 import android.webkit.ValueCallback
@@ -138,42 +139,10 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PERMISSION_REQUEST_GEO_LOCATION -> {
-                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {//COARSE_LOCATION 粗略的位置
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle("提示")
-                    builder.setMessage("粗略位置权限授权失败。")
-                    builder.setPositiveButton("好的", null)
-                    builder.show()
-                }
-                if (grantResults[1] != PackageManager.PERMISSION_GRANTED) {//FINE_LOCATION 精确的位置
-                    val builder = AlertDialog.Builder(this)
-                    builder.setTitle("提示")
-                    builder.setMessage("精确位置权限授权失败。")
-                    builder.setPositiveButton("好的", null)
-                    builder.show()
-                }
-            }
-        }
-    }
-
     /**
      * 处理各种通知 & 请求事件
      */
     private val mWebViewClient = object : WebViewClient() {
-        /**
-         * 网页加载完毕
-         */
-        override fun onPageFinished(webView: WebView?, url: String?) {
-            super.onPageFinished(webView, url)
-        }
 
         /**
          * 跳转拦截处理
@@ -197,6 +166,34 @@ class WebActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PERMISSION_REQUEST_GEO_LOCATION -> {
+                if (grantResults[0] != PackageManager.PERMISSION_GRANTED) {//COARSE_LOCATION 粗略的位置
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("提示")
+                    builder.setMessage("粗略位置权限授权失败。")
+                    builder.setPositiveButton("好的", null)
+                    builder.show()
+                }
+                if (grantResults[1] != PackageManager.PERMISSION_GRANTED) {//FINE_LOCATION 精确的位置
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("提示")
+                    builder.setMessage("精确位置权限授权失败。")
+                    builder.setPositiveButton("好的", null)
+                    builder.show()
+                }
+            }
+            else ->{
+                Log.d(TAG, "wrong requestCode")
+            }
+        }
+    }
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
@@ -209,6 +206,7 @@ class WebActivity : AppCompatActivity() {
 
     companion object {
         const val PERMISSION_REQUEST_GEO_LOCATION = 0x01
+        const val TAG = "WebActivity"
     }
 
 }

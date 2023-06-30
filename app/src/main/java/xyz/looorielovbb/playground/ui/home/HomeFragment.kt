@@ -41,7 +41,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 pagingAdapter.refresh()
             }
         }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -63,7 +62,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
-
     }
 
 }
