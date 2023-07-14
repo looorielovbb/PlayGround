@@ -10,7 +10,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
@@ -44,7 +43,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    pagingAdapter.loadStateFlow.collectLatest {
+                    pagingAdapter.loadStateFlow.collect {
                         when (it.refresh) {
                             is LoadState.Loading -> binding.swiper.isRefreshing = true
                             is LoadState.Error -> binding.swiper.isRefreshing = false
@@ -58,7 +57,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
                 launch {
-                    viewModel.flowData.collectLatest(pagingAdapter::submitData)
+                    viewModel.articlesFlow.collect(pagingAdapter::submitData)
                 }
             }
         }

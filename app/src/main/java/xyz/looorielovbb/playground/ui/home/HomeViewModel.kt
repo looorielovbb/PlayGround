@@ -12,6 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(wanRepository: WanRepository) : ViewModel() {
 
-    val flowData = wanRepository.fetchArticles().flowOn(Dispatchers.IO).cachedIn(viewModelScope)
+    val articlesFlow = wanRepository.fetchArticles().flowOn(Dispatchers.IO).cachedIn(viewModelScope)
 
 }

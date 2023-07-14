@@ -58,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                         viewpager2.currentItem = 2
                         true
                     }
-
                     else -> false
                 }
             }

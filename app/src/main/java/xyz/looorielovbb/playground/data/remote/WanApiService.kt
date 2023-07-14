@@ -18,5 +18,4 @@ interface WanApiService {
         @Query("page_size") pageSize: Int
     ): Base<ListData<Article>>
 
-
 }
