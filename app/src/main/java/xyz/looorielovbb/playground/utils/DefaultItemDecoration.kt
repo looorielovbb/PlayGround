@@ -1,4 +1,4 @@
-package xyz.looorielovbb.playground.ui
+package xyz.looorielovbb.playground.utils
 
 import android.graphics.Rect
 import android.view.View

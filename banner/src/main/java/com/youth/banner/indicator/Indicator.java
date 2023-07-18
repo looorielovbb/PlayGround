@@ -14,5 +14,4 @@ public interface Indicator extends OnPageChangeListener {
     IndicatorConfig getIndicatorConfig();
 
     void onPageChanged(int count, int currentPosition);
-
 }

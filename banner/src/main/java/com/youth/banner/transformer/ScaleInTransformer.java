@@ -4,11 +4,11 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public class ScaleInTransformer extends BasePageTransformer {
     private static final float DEFAULT_MIN_SCALE = 0.85f;
     private float mMinScale = DEFAULT_MIN_SCALE;
 
-    @SuppressWarnings("unused")
     public ScaleInTransformer() {
     }
 

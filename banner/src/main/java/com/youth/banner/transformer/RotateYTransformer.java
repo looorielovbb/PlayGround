@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public class RotateYTransformer extends BasePageTransformer {
     private static final float DEFAULT_MAX_ROTATE = 35f;
     private float mMaxRotate = DEFAULT_MAX_ROTATE;
@@ -17,7 +18,7 @@ public class RotateYTransformer extends BasePageTransformer {
 
     @Override
     public void transformPage(@NonNull View view, float position) {
-        view.setPivotY(view.getHeight()/2);
+        view.setPivotY(view.getHeight() >> 1);
 
         if (position < -1) { // [-Infinity,-1)
             // This page is way off-screen to the left.

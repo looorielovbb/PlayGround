@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
-import com.youth.banner.config.BannerConfig;
-
 /**
  * 矩形（条形）指示器
  * 1、可以设置选中和默认的宽度、指示器的圆角
@@ -14,7 +12,7 @@ import com.youth.banner.config.BannerConfig;
  * 3、如果不想选中时变长，可将选中的宽度和默认宽度设置为一样
  */
 public class RectangleIndicator extends BaseIndicator {
-    RectF rectF;
+    private final RectF rectF;
 
     public RectangleIndicator(Context context) {
         this(context, null);

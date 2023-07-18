@@ -11,6 +11,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -19,7 +20,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.IntDef;
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
@@ -43,18 +44,17 @@ import com.youth.banner.util.BannerLifecycleObserver;
 import com.youth.banner.util.ScrollSpeedManger;
 
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
-
-public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHolder>> extends FrameLayout implements BannerLifecycleObserver {
+@SuppressWarnings("unused")
+public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout implements BannerLifecycleObserver {
     public static final int INVALID_VALUE = -1;
     private ViewPager2 mViewPager2;
-    private AutoLoopTask mLoopTask;
+    private AutoLoopTask<T,VH> mLoopTask;
     private OnPageChangeListener mOnPageChangeListener;
-    private BA mAdapter;
+    private BannerAdapter<T, VH> mAdapter;
     private Indicator mIndicator;
     private CompositePageTransformer mCompositePageTransformer;
     private BannerOnPageChangeCallback mPageChangeCallback;
@@ -97,8 +97,6 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
     private int mTouchSlop;
     // 记录触摸的位置（主要用于解决事件冲突问题）
     private float mStartX, mStartY;
-    // 记录viewpager2是否被拖动
-    private boolean mIsViewPager2Drag;
     // 是否要拦截事件
     private boolean isIntercept = true;
 
@@ -106,7 +104,7 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
     private Paint mRoundPaint;
     private Paint mImagePaint;
 
-    @Retention(SOURCE)
+    @Retention(RetentionPolicy.SOURCE)
     @IntDef( {HORIZONTAL, VERTICAL})
     public @interface Orientation {
     }
@@ -129,7 +127,7 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop() / 2;
         mCompositePageTransformer = new CompositePageTransformer();
         mPageChangeCallback = new BannerOnPageChangeCallback();
-        mLoopTask = new AutoLoopTask(this);
+        mLoopTask = new AutoLoopTask<>(this);
         mViewPager2 = new ViewPager2(context);
         mViewPager2.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mViewPager2.setOffscreenPageLimit(2);
@@ -149,30 +147,30 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
 
     private void initTypedArray(Context context, AttributeSet attrs) {
         if (attrs != null) {
-            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.Banner);
-            mBannerRadius = a.getDimensionPixelSize(R.styleable.Banner_banner_radius, 0);
-            mLoopTime = a.getInt(R.styleable.Banner_banner_loop_time, BannerConfig.LOOP_TIME);
-            mIsAutoLoop = a.getBoolean(R.styleable.Banner_banner_auto_loop, BannerConfig.IS_AUTO_LOOP);
-            mIsInfiniteLoop = a.getBoolean(R.styleable.Banner_banner_infinite_loop, BannerConfig.IS_INFINITE_LOOP);
-            normalWidth = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_normal_width, BannerConfig.INDICATOR_NORMAL_WIDTH);
-            selectedWidth = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_selected_width, BannerConfig.INDICATOR_SELECTED_WIDTH);
-            normalColor = a.getColor(R.styleable.Banner_banner_indicator_normal_color, BannerConfig.INDICATOR_NORMAL_COLOR);
-            selectedColor = a.getColor(R.styleable.Banner_banner_indicator_selected_color, BannerConfig.INDICATOR_SELECTED_COLOR);
-            indicatorGravity = a.getInt(R.styleable.Banner_banner_indicator_gravity, IndicatorConfig.Direction.CENTER);
-            indicatorSpace = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_space, 0);
-            indicatorMargin = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_margin, 0);
-            indicatorMarginLeft = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginLeft, 0);
-            indicatorMarginTop = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginTop, 0);
-            indicatorMarginRight = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginRight, 0);
-            indicatorMarginBottom = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginBottom, 0);
-            indicatorHeight = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_height, BannerConfig.INDICATOR_HEIGHT);
-            indicatorRadius = a.getDimensionPixelSize(R.styleable.Banner_banner_indicator_radius, BannerConfig.INDICATOR_RADIUS);
-            mOrientation = a.getInt(R.styleable.Banner_banner_orientation, HORIZONTAL);
-            mRoundTopLeft = a.getBoolean(R.styleable.Banner_banner_round_top_left, false);
-            mRoundTopRight = a.getBoolean(R.styleable.Banner_banner_round_top_right, false);
-            mRoundBottomLeft = a.getBoolean(R.styleable.Banner_banner_round_bottom_left, false);
-            mRoundBottomRight = a.getBoolean(R.styleable.Banner_banner_round_bottom_right, false);
-            a.recycle();
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Banner);
+            mBannerRadius = array.getDimensionPixelSize(R.styleable.Banner_banner_radius, 0);
+            mLoopTime = array.getInt(R.styleable.Banner_banner_loop_time, BannerConfig.LOOP_TIME);
+            mIsAutoLoop = array.getBoolean(R.styleable.Banner_banner_auto_loop, BannerConfig.IS_AUTO_LOOP);
+            mIsInfiniteLoop = array.getBoolean(R.styleable.Banner_banner_infinite_loop, BannerConfig.IS_INFINITE_LOOP);
+            normalWidth = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_normal_width, BannerConfig.INDICATOR_NORMAL_WIDTH);
+            selectedWidth = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_selected_width, BannerConfig.INDICATOR_SELECTED_WIDTH);
+            normalColor = array.getColor(R.styleable.Banner_banner_indicator_normal_color, BannerConfig.INDICATOR_NORMAL_COLOR);
+            selectedColor = array.getColor(R.styleable.Banner_banner_indicator_selected_color, BannerConfig.INDICATOR_SELECTED_COLOR);
+            indicatorGravity = array.getInt(R.styleable.Banner_banner_indicator_gravity, IndicatorConfig.Direction.CENTER);
+            indicatorSpace = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_space, 0);
+            indicatorMargin = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_margin, 0);
+            indicatorMarginLeft = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginLeft, 0);
+            indicatorMarginTop = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginTop, 0);
+            indicatorMarginRight = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginRight, 0);
+            indicatorMarginBottom = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginBottom, 0);
+            indicatorHeight = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_height, BannerConfig.INDICATOR_HEIGHT);
+            indicatorRadius = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_radius, BannerConfig.INDICATOR_RADIUS);
+            mOrientation = array.getInt(R.styleable.Banner_banner_orientation, HORIZONTAL);
+            mRoundTopLeft = array.getBoolean(R.styleable.Banner_banner_round_top_left, false);
+            mRoundTopRight = array.getBoolean(R.styleable.Banner_banner_round_top_right, false);
+            mRoundBottomLeft = array.getBoolean(R.styleable.Banner_banner_round_bottom_left, false);
+            mRoundBottomRight = array.getBoolean(R.styleable.Banner_banner_round_bottom_right, false);
+            array.recycle();
         }
         setOrientation(mOrientation);
         setInfiniteLoop();
@@ -236,6 +234,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
         if (!getViewPager2().isUserInputEnabled() || !isIntercept) {
             return super.onInterceptTouchEvent(event);
         }
+        // 记录viewpager2是否被拖动
+        boolean mIsViewPager2Drag;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mStartX = event.getX();
@@ -247,7 +247,7 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
                 float endY = event.getY();
                 float distanceX = Math.abs(endX - mStartX);
                 float distanceY = Math.abs(endY - mStartY);
-                if (getViewPager2().getOrientation() == HORIZONTAL) {
+                if (getViewPager2().getOrientation() == ViewPager2.ORIENTATION_HORIZONTAL) {
                     mIsViewPager2Drag = distanceX > mTouchSlop && distanceX > distanceY;
                 } else {
                     mIsViewPager2Drag = distanceY > mTouchSlop && distanceY > distanceX;
@@ -406,16 +406,16 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
 
     }
 
-    static class AutoLoopTask implements Runnable {
-        private final WeakReference<Banner> reference;
+    static class AutoLoopTask<T,VH extends RecyclerView.ViewHolder> implements Runnable {
+        private final WeakReference<Banner<T,VH>> reference;
 
-        AutoLoopTask(Banner banner) {
+        AutoLoopTask(Banner<T,VH> banner) {
             this.reference = new WeakReference<>(banner);
         }
 
         @Override
         public void run() {
-            Banner banner = reference.get();
+            Banner<T,VH> banner = reference.get();
             if (banner != null && banner.mIsAutoLoop) {
                 int count = banner.getItemCount();
                 if (count == 0) {
@@ -467,7 +467,7 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
     private void setRecyclerViewPadding(int leftItemPadding, int rightItemPadding) {
         RecyclerView recyclerView = (RecyclerView) getViewPager2().getChildAt(0);
         if (getViewPager2().getOrientation() == ViewPager2.ORIENTATION_VERTICAL) {
-            recyclerView.setPadding(mViewPager2.getPaddingLeft(), leftItemPadding, mViewPager2.getPaddingRight(), rightItemPadding);
+            recyclerView.setPadding(mViewPager2.getPaddingLeft(), leftItemPadding+1, mViewPager2.getPaddingRight(), rightItemPadding+1);
         } else {
             recyclerView.setPadding(leftItemPadding, mViewPager2.getPaddingTop(), rightItemPadding, mViewPager2.getPaddingBottom());
         }
@@ -501,7 +501,7 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
         return mIsInfiniteLoop;
     }
 
-    public BannerAdapter getAdapter() {
+    public  BannerAdapter<T, VH> getAdapter() {
         return mAdapter;
     }
 
@@ -531,60 +531,46 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
 
     }
 
-    //-----------------------------------------------------------------------------------------
-
     /**
      * 是否要拦截事件
-     * @param intercept
-     * @return
      */
-    public Banner setIntercept(boolean intercept) {
+    public void setIntercept(boolean intercept) {
         isIntercept = intercept;
-        return this;
     }
 
     /**
      * 跳转到指定位置（最好在设置了数据后在调用，不然没有意义）
-     * @param position
-     * @return
      */
-    public Banner setCurrentItem(int position) {
-        return setCurrentItem(position, true);
+    public void setCurrentItem(int position) {
+        setCurrentItem(position, true);
     }
 
     /**
      * 跳转到指定位置（最好在设置了数据后在调用，不然没有意义）
-     * @param position
-     * @param smoothScroll
-     * @return
      */
-    public Banner setCurrentItem(int position, boolean smoothScroll) {
+    public void setCurrentItem(int position, boolean smoothScroll) {
         getViewPager2().setCurrentItem(position, smoothScroll);
-        return this;
     }
 
-    public Banner setIndicatorPageChange() {
+    public void setIndicatorPageChange() {
         if (getIndicator() != null) {
             int realPosition = BannerUtils.getRealPosition(isInfiniteLoop(), getCurrentItem(), getRealCount());
             getIndicator().onPageChanged(getRealCount(), realPosition);
         }
-        return this;
     }
 
-    public Banner removeIndicator() {
+    public void removeIndicator() {
         if (getIndicator() != null) {
             removeView(getIndicator().getIndicatorView());
         }
-        return this;
     }
 
 
     /**
      * 设置开始的位置 (需要在setAdapter或者setDatas之前调用才有效哦)
      */
-    public Banner setStartPosition(int mStartPosition) {
+    public void setStartPosition(int mStartPosition) {
         this.mStartPosition = mStartPosition;
-        return this;
     }
 
     public int getStartPosition() {
@@ -596,9 +582,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      *
      * @param enabled true 允许，false 禁止
      */
-    public Banner setUserInputEnabled(boolean enabled) {
+    public void setUserInputEnabled(boolean enabled) {
         getViewPager2().setUserInputEnabled(enabled);
-        return this;
     }
 
     /**
@@ -606,35 +591,31 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      * {@link ViewPager2.PageTransformer}
      * 如果找不到请导入implementation "androidx.viewpager2:viewpager2:1.0.0"
      */
-    public Banner addPageTransformer(@Nullable ViewPager2.PageTransformer transformer) {
+    public void addPageTransformer(@NonNull ViewPager2.PageTransformer transformer) {
         mCompositePageTransformer.addTransformer(transformer);
-        return this;
     }
 
     /**
      * 设置PageTransformer，和addPageTransformer不同，这个只支持一种transformer
      */
-    public Banner setPageTransformer(@Nullable ViewPager2.PageTransformer transformer) {
+
+    public void setPageTransformer(@NonNull ViewPager2.PageTransformer transformer) {
         getViewPager2().setPageTransformer(transformer);
-        return this;
     }
 
-    public Banner removeTransformer(ViewPager2.PageTransformer transformer) {
+    public void removeTransformer(ViewPager2.PageTransformer transformer) {
         mCompositePageTransformer.removeTransformer(transformer);
-        return this;
     }
 
     /**
      * 添加 ItemDecoration
      */
-    public Banner addItemDecoration(RecyclerView.ItemDecoration decor) {
+    public void addItemDecoration(RecyclerView.ItemDecoration decor) {
         getViewPager2().addItemDecoration(decor);
-        return this;
     }
 
-    public Banner addItemDecoration(RecyclerView.ItemDecoration decor, int index) {
+    public void addItemDecoration(RecyclerView.ItemDecoration decor, int index) {
         getViewPager2().addItemDecoration(decor, index);
-        return this;
     }
 
     /**
@@ -642,9 +623,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      *
      * @param isAutoLoop ture 允许，false 不允许
      */
-    public Banner isAutoLoop(boolean isAutoLoop) {
+    public void isAutoLoop(boolean isAutoLoop) {
         this.mIsAutoLoop = isAutoLoop;
-        return this;
     }
 
 
@@ -653,38 +633,34 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      *
      * @param loopTime 时间（毫秒）
      */
-    public Banner setLoopTime(long loopTime) {
+    public void setLoopTime(long loopTime) {
         this.mLoopTime = loopTime;
-        return this;
     }
 
     /**
      * 设置轮播滑动过程的时间
      */
-    public Banner setScrollTime(int scrollTime) {
+    public void setScrollTime(int scrollTime) {
         this.mScrollTime = scrollTime;
-        return this;
     }
 
     /**
      * 开始轮播
      */
-    public Banner start() {
+    public void start() {
         if (mIsAutoLoop) {
             stop();
             postDelayed(mLoopTask, mLoopTime);
         }
-        return this;
     }
 
     /**
      * 停止轮播
      */
-    public Banner stop() {
+    public void stop() {
         if (mIsAutoLoop) {
             removeCallbacks(mLoopTask);
         }
-        return this;
     }
 
     /**
@@ -701,7 +677,7 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
     /**
      * 设置banner的适配器
      */
-    public Banner setAdapter(BA adapter) {
+    public void setAdapter(BannerAdapter<T,VH> adapter) {
         if (adapter == null) {
             throw new NullPointerException(getContext().getString(R.string.banner_adapter_null_error));
         }
@@ -710,66 +686,58 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
             getAdapter().setIncreaseCount(0);
         }
         getAdapter().registerAdapterDataObserver(mAdapterDataObserver);
+        Log.d("TAG", "banner setAdapter: ");
         mViewPager2.setAdapter(adapter);
         setCurrentItem(mStartPosition, false);
         initIndicator();
-        return this;
     }
 
     /**
      * 设置banner的适配器
-     * @param adapter
      * @param isInfiniteLoop 是否支持无限循环
-     * @return
      */
-    public Banner setAdapter(BA adapter,boolean isInfiniteLoop) {
-        mIsInfiniteLoop=isInfiniteLoop;
+    public void setAdapter(BannerAdapter<T,VH> adapter, boolean isInfiniteLoop) {
+        mIsInfiniteLoop = isInfiniteLoop;
         setInfiniteLoop();
         setAdapter(adapter);
-        return this;
     }
 
     /**
      * 重新设置banner数据，当然你也可以在你adapter中自己操作数据,不要过于局限在这个方法，举一反三哈
-     *
      * @param datas 数据集合，当传null或者datas没有数据时，banner会变成空白的，请做好占位UI处理
      */
-    public Banner setDatas(List<T> datas) {
+    public void setDatas(List<T> datas) {
         if (getAdapter() != null) {
             getAdapter().setDatas(datas);
             setCurrentItem(mStartPosition, false);
             setIndicatorPageChange();
             start();
         }
-        return this;
     }
 
     /**
      * 设置banner轮播方向
-     *
      * @param orientation {@link Orientation}
      */
-    public Banner setOrientation(@Orientation int orientation) {
+    public void setOrientation(@Orientation int orientation) {
         getViewPager2().setOrientation(orientation);
-        return this;
     }
 
     /**
      * 改变最小滑动距离
      */
-    public Banner setTouchSlop(int mTouchSlop) {
+
+    public void setTouchSlop(int mTouchSlop) {
         this.mTouchSlop = mTouchSlop;
-        return this;
     }
 
     /**
      * 设置点击事件
      */
-    public Banner setOnBannerListener(OnBannerListener<T> listener) {
+    public  void setOnBannerListener(OnBannerListener<T> listener) {
         if (getAdapter() != null) {
             getAdapter().setOnBannerListener(listener);
         }
-        return this;
     }
 
     /**
@@ -779,9 +747,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      * 为了方便使用习惯这里用的是和viewpager一样的{@link ViewPager.OnPageChangeListener}接口
      * </p>
      */
-    public Banner addOnPageChangeListener(OnPageChangeListener pageListener) {
+    public void addOnPageChangeListener(OnPageChangeListener pageListener) {
         this.mOnPageChangeListener = pageListener;
-        return this;
     }
 
     /**
@@ -791,18 +758,16 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      *
      * @param radius 圆角半径
      */
-    public Banner setBannerRound(float radius) {
+    public void setBannerRound(float radius) {
         mBannerRadius = radius;
-        return this;
     }
 
     /**
      * 设置banner圆角(第二种方式，和上面的方法不要同时使用)，只支持5.0以上
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public Banner setBannerRound2(float radius) {
+    public void setBannerRound2(float radius) {
         BannerUtils.setBannerRound(this, radius);
-        return this;
     }
 
     /**
@@ -811,8 +776,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      * @param itemWidth  item左右展示的宽度,单位dp
      * @param pageMargin 页面间距,单位dp
      */
-    public Banner setBannerGalleryEffect(int itemWidth, int pageMargin) {
-        return setBannerGalleryEffect(itemWidth, pageMargin, .85f);
+    public void setBannerGalleryEffect(int itemWidth, int pageMargin) {
+         setBannerGalleryEffect(itemWidth, pageMargin, .85f);
     }
 
     /**
@@ -822,8 +787,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      * @param rightItemWidth item右展示的宽度,单位dp
      * @param pageMargin     页面间距,单位dp
      */
-    public Banner setBannerGalleryEffect(int leftItemWidth, int rightItemWidth, int pageMargin) {
-        return setBannerGalleryEffect(leftItemWidth,rightItemWidth, pageMargin, .85f);
+    public void setBannerGalleryEffect(int leftItemWidth, int rightItemWidth, int pageMargin) {
+         setBannerGalleryEffect(leftItemWidth,rightItemWidth, pageMargin, .85f);
     }
 
     /**
@@ -833,8 +798,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      * @param pageMargin 页面间距,单位dp
      * @param scale      缩放[0-1],1代表不缩放
      */
-    public Banner setBannerGalleryEffect(int itemWidth, int pageMargin, float scale) {
-        return setBannerGalleryEffect(itemWidth, itemWidth, pageMargin, scale);
+    public void setBannerGalleryEffect(int itemWidth, int pageMargin, float scale) {
+        setBannerGalleryEffect(itemWidth, itemWidth, pageMargin, scale);
     }
 
     /**
@@ -845,7 +810,7 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      * @param pageMargin     页面间距,单位dp
      * @param scale          缩放[0-1],1代表不缩放
      */
-    public Banner setBannerGalleryEffect(int leftItemWidth, int rightItemWidth, int pageMargin, float scale) {
+    public void setBannerGalleryEffect(int leftItemWidth, int rightItemWidth, int pageMargin, float scale) {
         if (pageMargin > 0) {
             addPageTransformer(new MarginPageTransformer(BannerUtils.dp2px(pageMargin)));
         }
@@ -854,7 +819,6 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
         }
         setRecyclerViewPadding(leftItemWidth > 0 ? BannerUtils.dp2px(leftItemWidth + pageMargin) : 0,
                 rightItemWidth > 0 ? BannerUtils.dp2px(rightItemWidth + pageMargin) : 0);
-        return this;
     }
 
     /**
@@ -862,8 +826,8 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      *
      * @param itemWidth item左右展示的宽度,单位dp
      */
-    public Banner setBannerGalleryMZ(int itemWidth) {
-        return setBannerGalleryMZ(itemWidth, .88f);
+    public void setBannerGalleryMZ(int itemWidth) {
+        setBannerGalleryMZ(itemWidth, .88f);
     }
 
     /**
@@ -872,25 +836,18 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      * @param itemWidth item左右展示的宽度,单位dp
      * @param scale     缩放[0-1],1代表不缩放
      */
-    public Banner setBannerGalleryMZ(int itemWidth, float scale) {
+    public void setBannerGalleryMZ(int itemWidth, float scale) {
         if (scale < 1 && scale > 0) {
             addPageTransformer(new MZScaleInTransformer(scale));
         }
         setRecyclerViewPadding(BannerUtils.dp2px(itemWidth));
-        return this;
     }
-
-    /**
-     * **********************************************************************
-     * ------------------------ 指示器相关设置 --------------------------------*
-     * **********************************************************************
-     */
 
     /**
      * 设置轮播指示器(显示在banner上)
      */
-    public Banner setIndicator(Indicator indicator) {
-        return setIndicator(indicator, true);
+    public void setIndicator(Indicator indicator) {
+        setIndicator(indicator, true);
     }
 
     /**
@@ -900,109 +857,92 @@ public class Banner<T, BA extends BannerAdapter<T, ? extends RecyclerView.ViewHo
      *                       注意：设置为false后，内置的 setIndicatorGravity()和setIndicatorMargins() 方法将失效。
      *                       想改变可以自己调用系统提供的属性在布局文件中进行设置。具体可以参照demo
      */
-    public Banner setIndicator(Indicator indicator, boolean attachToBanner) {
+    public void setIndicator(Indicator indicator, boolean attachToBanner) {
         removeIndicator();
         indicator.getIndicatorConfig().setAttachToBanner(attachToBanner);
         this.mIndicator = indicator;
         initIndicator();
-        return this;
     }
 
 
-    public Banner setIndicatorSelectedColor(@ColorInt int color) {
+    public void setIndicatorSelectedColor(@ColorInt int color) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setSelectedColor(color);
         }
-        return this;
     }
 
-    public Banner setIndicatorSelectedColorRes(@ColorRes int color) {
+    public void setIndicatorSelectedColorRes(@ColorRes int color) {
         setIndicatorSelectedColor(ContextCompat.getColor(getContext(), color));
-        return this;
     }
 
-    public Banner setIndicatorNormalColor(@ColorInt int color) {
+    public void setIndicatorNormalColor(@ColorInt int color) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setNormalColor(color);
         }
-        return this;
     }
 
-    public Banner setIndicatorNormalColorRes(@ColorRes int color) {
+    public void setIndicatorNormalColorRes(@ColorRes int color) {
         setIndicatorNormalColor(ContextCompat.getColor(getContext(), color));
-        return this;
     }
 
-    public Banner setIndicatorGravity(@IndicatorConfig.Direction int gravity) {
+    public void setIndicatorGravity(@IndicatorConfig.Direction int gravity) {
         if (getIndicatorConfig() != null && getIndicatorConfig().isAttachToBanner()) {
             getIndicatorConfig().setGravity(gravity);
             getIndicator().getIndicatorView().postInvalidate();
         }
-        return this;
     }
 
-    public Banner setIndicatorSpace(int indicatorSpace) {
+    public void setIndicatorSpace(int indicatorSpace) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setIndicatorSpace(indicatorSpace);
         }
-        return this;
     }
 
-    public Banner setIndicatorMargins(IndicatorConfig.Margins margins) {
+    public void setIndicatorMargins(IndicatorConfig.Margins margins) {
         if (getIndicatorConfig() != null && getIndicatorConfig().isAttachToBanner()) {
             getIndicatorConfig().setMargins(margins);
             getIndicator().getIndicatorView().requestLayout();
         }
-        return this;
     }
 
-    public Banner setIndicatorWidth(int normalWidth, int selectedWidth) {
+    public void setIndicatorWidth(int normalWidth, int selectedWidth) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setNormalWidth(normalWidth);
             getIndicatorConfig().setSelectedWidth(selectedWidth);
         }
-        return this;
     }
 
-    public Banner setIndicatorNormalWidth(int normalWidth) {
+    public void setIndicatorNormalWidth(int normalWidth) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setNormalWidth(normalWidth);
         }
-        return this;
     }
 
-    public Banner setIndicatorSelectedWidth(int selectedWidth) {
+    public void setIndicatorSelectedWidth(int selectedWidth) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setSelectedWidth(selectedWidth);
         }
-        return this;
     }
 
-    public Banner setIndicatorRadius(int indicatorRadius) {
+    public void setIndicatorRadius(int indicatorRadius) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setRadius(indicatorRadius);
         }
-        return this;
     }
 
-    public Banner setIndicatorHeight(int indicatorHeight) {
+    public void setIndicatorHeight(int indicatorHeight) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setHeight(indicatorHeight);
         }
-        return this;
     }
 
     /**
-     * **********************************************************************
-     * ------------------------ 生命周期控制 --------------------------------*
-     * **********************************************************************
+     * 生命周期控制
      */
-
-    public Banner addBannerLifecycleObserver(LifecycleOwner owner) {
+    public void addBannerLifecycleObserver(LifecycleOwner owner) {
         if (owner != null) {
             owner.getLifecycle().addObserver(new BannerLifecycleObserverAdapter(owner, this));
         }
-        return this;
     }
 
     @Override

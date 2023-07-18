@@ -13,10 +13,10 @@ import java.lang.reflect.Field;
 /**
  * 改变LinearLayoutManager的切换速度
  */
-public class ScrollSpeedManger extends LinearLayoutManager {
-    private Banner banner;
+public class ScrollSpeedManger<T,VH extends RecyclerView.ViewHolder> extends LinearLayoutManager {
+    private final Banner<T,VH> banner;
 
-    public ScrollSpeedManger(Banner banner, LinearLayoutManager linearLayoutManager) {
+    public ScrollSpeedManger(Banner<T,VH> banner, LinearLayoutManager linearLayoutManager) {
         super(banner.getContext(), linearLayoutManager.getOrientation(), false);
         this.banner = banner;
     }
@@ -33,14 +33,17 @@ public class ScrollSpeedManger extends LinearLayoutManager {
         startSmoothScroll(linearSmoothScroller);
     }
 
-    public static void reflectLayoutManager(Banner banner) {
+    public static <T, VH extends RecyclerView.ViewHolder> void reflectLayoutManager(Banner<T,VH> banner) {
         if (banner.getScrollTime() < 100) return;
         try {
             ViewPager2 viewPager2 = banner.getViewPager2();
             RecyclerView recyclerView = (RecyclerView) viewPager2.getChildAt(0);
+            if(recyclerView.getLayoutManager()==null){
+                return;
+            }
             recyclerView.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
 
-            ScrollSpeedManger speedManger = new ScrollSpeedManger(banner, (LinearLayoutManager) recyclerView.getLayoutManager());
+            ScrollSpeedManger<T,VH> speedManger = new ScrollSpeedManger<>(banner, (LinearLayoutManager) recyclerView.getLayoutManager());
             recyclerView.setLayoutManager(speedManger);
 
 

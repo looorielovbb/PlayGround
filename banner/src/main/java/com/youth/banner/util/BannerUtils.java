@@ -13,6 +13,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+@SuppressWarnings("unused")
 public class BannerUtils {
 
     /**
@@ -21,7 +22,6 @@ public class BannerUtils {
      * @param isIncrease 首尾是否有增加
      * @param position  当前位置
      * @param realCount 真实数量
-     * @return
      */
     public static int getRealPosition(boolean isIncrease, int position, int realCount) {
         if (!isIncrease) {
@@ -40,10 +40,6 @@ public class BannerUtils {
 
     /**
      * 将布局文件转成view，这里为了适配viewpager2中高宽必须为match_parent
-     *
-     * @param parent
-     * @param layoutId
-     * @return
      */
     public static View getView(@NonNull ViewGroup parent, @LayoutRes int layoutId) {
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
@@ -63,9 +59,6 @@ public class BannerUtils {
 
     /**
      * 设置view圆角
-     *
-     * @param radius
-     * @return
      */
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public static void setBannerRound(View view,float radius) {

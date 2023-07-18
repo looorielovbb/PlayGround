@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 /**
  * 内部实现魅族效果使用的，单独使用可能效果不一定好，自己可以尝试下看看是否满意，推荐使用ScaleInTransformer
  */
+@SuppressWarnings("unused")
 public class MZScaleInTransformer extends BasePageTransformer {
     private static final float DEFAULT_MIN_SCALE = 0.85f;
     private float mMinScale = DEFAULT_MIN_SCALE;
@@ -29,10 +30,9 @@ public class MZScaleInTransformer extends BasePageTransformer {
         float width = viewPager.getMeasuredWidth();
         float offsetPosition = paddingLeft / (width - paddingLeft - paddingRight);
         float currentPos = position - offsetPosition;
-        float reduceX = 0;
         float itemWidth = view.getWidth();
         //由于左右边的缩小而减小的x的大小的一半
-        reduceX = (1.0f - mMinScale) * itemWidth / 2.0f;
+        float reduceX = (1.0f - mMinScale) * itemWidth / 2.0f;
         if (currentPos <= -1.0f) {
             view.setTranslationX(reduceX);
             view.setScaleX(mMinScale);
@@ -40,12 +40,13 @@ public class MZScaleInTransformer extends BasePageTransformer {
         } else if (currentPos <= 1.0) {
             float scale = (1.0f - mMinScale) * Math.abs(1.0f - Math.abs(currentPos));
             float translationX = currentPos * -reduceX;
+            float abs = Math.abs(Math.abs(currentPos) - 0.5f);
             if (currentPos <= -0.5) {//两个view中间的临界，这时两个view在同一层，左侧View需要往X轴正方向移动覆盖的值()
-                view.setTranslationX(translationX + Math.abs(Math.abs(currentPos) - 0.5f) / 0.5f);
+                view.setTranslationX(translationX + abs / 0.5f);
             } else if (currentPos <= 0.0f) {
                 view.setTranslationX(translationX);
             } else if (currentPos >= 0.5) {//两个view中间的临界，这时两个view在同一层
-                view.setTranslationX(translationX - Math.abs(Math.abs(currentPos) - 0.5f) / 0.5f);
+                view.setTranslationX(translationX - abs / 0.5f);
             } else {
                 view.setTranslationX(translationX);
             }

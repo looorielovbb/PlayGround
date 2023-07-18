@@ -4,7 +4,6 @@ import com.youth.banner.util.BannerUtils;
 
 /**
  * 不忘初心
- *
  * ┌───┐   ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┬───┐ ┌───┬───┬───┐  ┌┐    ┌┐    ┌┐
  * │Esc│   │ F1│ F2│ F3│ F4│ │ F5│ F6│ F7│ F8│ │ F9│F10│F11│F12│ │P/S│S L│P/B│  └┘    └┘    └┘
  * └───┘   └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┴───┘ └───┴───┴───┘
@@ -21,7 +20,6 @@ import com.youth.banner.util.BannerUtils;
  * └─────┴────┴────┴───────────────────────┴────┴────┴────┴────┘ └───┴───┴───┘ └───────┴───┴───┘
  *
  *  @author youth5201314/spring
- *  @date 2020/1/24
  *  banner 配置参数
  */
 public class BannerConfig {
@@ -32,12 +30,12 @@ public class BannerConfig {
     public static final int INCREASE_COUNT = 2;
     public static final int INDICATOR_NORMAL_COLOR = 0x88ffffff;
     public static final int INDICATOR_SELECTED_COLOR = 0x88000000;
-    public static final int INDICATOR_NORMAL_WIDTH = (int) BannerUtils.dp2px(5);
-    public static final int INDICATOR_SELECTED_WIDTH = (int) BannerUtils.dp2px(7);
-    public static final int INDICATOR_SPACE = (int) BannerUtils.dp2px(5);
-    public static final int INDICATOR_MARGIN = (int) BannerUtils.dp2px(5);
+    public static final int INDICATOR_NORMAL_WIDTH = BannerUtils.dp2px(5);
+    public static final int INDICATOR_SELECTED_WIDTH = BannerUtils.dp2px(7);
+    public static final int INDICATOR_SPACE = BannerUtils.dp2px(5);
+    public static final int INDICATOR_MARGIN = BannerUtils.dp2px(5);
 
-    public static final int INDICATOR_HEIGHT = (int) BannerUtils.dp2px(3);
-    public static final int INDICATOR_RADIUS = (int) BannerUtils.dp2px(3);
+    public static final int INDICATOR_HEIGHT = BannerUtils.dp2px(3);
+    public static final int INDICATOR_RADIUS = BannerUtils.dp2px(3);
 
 }

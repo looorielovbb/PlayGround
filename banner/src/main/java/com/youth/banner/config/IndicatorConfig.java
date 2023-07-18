@@ -64,108 +64,95 @@ public class IndicatorConfig {
         return margins;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public IndicatorConfig setMargins(Margins margins) {
+    public void setMargins(Margins margins) {
         this.margins = margins;
-        return this;
     }
 
     public int getIndicatorSize() {
         return indicatorSize;
     }
 
-    public IndicatorConfig setIndicatorSize(int indicatorSize) {
+    public void setIndicatorSize(int indicatorSize) {
         this.indicatorSize = indicatorSize;
-        return this;
     }
 
     public int getNormalColor() {
         return normalColor;
     }
 
-    public IndicatorConfig setNormalColor(int normalColor) {
+    public void setNormalColor(int normalColor) {
         this.normalColor = normalColor;
-        return this;
     }
 
     public int getSelectedColor() {
         return selectedColor;
     }
 
-    public IndicatorConfig setSelectedColor(int selectedColor) {
+    public void setSelectedColor(int selectedColor) {
         this.selectedColor = selectedColor;
-        return this;
     }
 
     public int getIndicatorSpace() {
         return indicatorSpace;
     }
 
-    public IndicatorConfig setIndicatorSpace(int indicatorSpace) {
+    public void setIndicatorSpace(int indicatorSpace) {
         this.indicatorSpace = indicatorSpace;
-        return this;
     }
 
     public int getCurrentPosition() {
         return currentPosition;
     }
 
-    public IndicatorConfig setCurrentPosition(int currentPosition) {
+    public void setCurrentPosition(int currentPosition) {
         this.currentPosition = currentPosition;
-        return this;
     }
 
     public int getNormalWidth() {
         return normalWidth;
     }
 
-    public IndicatorConfig setNormalWidth(int normalWidth) {
+    public void setNormalWidth(int normalWidth) {
         this.normalWidth = normalWidth;
-        return this;
     }
 
     public int getSelectedWidth() {
         return selectedWidth;
     }
 
-    public IndicatorConfig setSelectedWidth(int selectedWidth) {
+    public void setSelectedWidth(int selectedWidth) {
         this.selectedWidth = selectedWidth;
-        return this;
     }
 
     public int getGravity() {
         return gravity;
     }
 
-    public IndicatorConfig setGravity(@Direction int gravity) {
+    public void setGravity(@Direction int gravity) {
         this.gravity = gravity;
-        return this;
     }
 
     public boolean isAttachToBanner() {
         return attachToBanner;
     }
 
-    public IndicatorConfig setAttachToBanner(boolean attachToBanner) {
+    public void setAttachToBanner(boolean attachToBanner) {
         this.attachToBanner = attachToBanner;
-        return this;
     }
 
     public int getRadius() {
         return radius;
     }
 
-    public IndicatorConfig setRadius(int radius) {
+    public void setRadius(int radius) {
         this.radius = radius;
-        return this;
     }
 
     public int getHeight() {
         return height;
     }
 
-    public IndicatorConfig setHeight(int height) {
+    public void setHeight(int height) {
         this.height = height;
-        return this;
     }
 }

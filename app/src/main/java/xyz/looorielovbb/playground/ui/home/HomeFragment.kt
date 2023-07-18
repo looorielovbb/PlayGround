@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
 import xyz.looorielovbb.playground.ext.binding
-import xyz.looorielovbb.playground.ui.DefaultItemDecoration
+import xyz.looorielovbb.playground.utils.DefaultItemDecoration
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {

@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public class RotateDownPageTransformer extends BasePageTransformer {
     private static final float DEFAULT_MAX_ROTATE = 15.0f;
     private float mMaxRotate = DEFAULT_MAX_ROTATE;
@@ -38,7 +39,7 @@ public class RotateDownPageTransformer extends BasePageTransformer {
             // (1,+Infinity]
             // This page is way off-screen to the right.
             view.setRotation(mMaxRotate);
-            view.setPivotX(view.getWidth() * 0);
+            view.setPivotX(0);
             view.setPivotY(view.getHeight());
         }
     }

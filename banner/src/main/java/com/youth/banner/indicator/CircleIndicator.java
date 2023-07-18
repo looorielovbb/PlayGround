@@ -59,14 +59,6 @@ public class CircleIndicator extends BaseIndicator {
             canvas.drawCircle(left + radius, maxRadius, radius, mPaint);
             left += indicatorWidth + config.getIndicatorSpace();
         }
-//        mPaint.setColor(config.getNormalColor());
-//        for (int i = 0; i < count; i++) {
-//            canvas.drawCircle(left + maxRadius, maxRadius, mNormalRadius, mPaint);
-//            left += config.getNormalWidth() + config.getIndicatorSpace();
-//        }
-//        mPaint.setColor(config.getSelectedColor());
-//        left = maxRadius + (config.getNormalWidth() + config.getIndicatorSpace()) * config.getCurrentPosition();
-//        canvas.drawCircle(left, maxRadius, mSelectedRadius, mPaint);
     }
 
 }

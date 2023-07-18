@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public class AlphaPageTransformer extends BasePageTransformer {
     private static final float DEFAULT_MIN_ALPHA = 0.5f;
     private float mMinAlpha = DEFAULT_MIN_ALPHA;
@@ -23,15 +24,15 @@ public class AlphaPageTransformer extends BasePageTransformer {
             view.setAlpha(mMinAlpha);
         } else if (position <= 1) { // [-1,1]
             //[0，-1]
+            float factor;
             if (position < 0) {
                 //[1,min]
-                float factor = mMinAlpha + (1 - mMinAlpha) * (1 + position);
-                view.setAlpha(factor);
+                factor = mMinAlpha + (1 - mMinAlpha) * (1 + position);
             } else {//[1，0]
                 //[min,1]
-                float factor = mMinAlpha + (1 - mMinAlpha) * (1 - position);
-                view.setAlpha(factor);
+                factor = mMinAlpha + (1 - mMinAlpha) * (1 - position);
             }
+            view.setAlpha(factor);
         } else { // (1,+Infinity]
             view.setAlpha(mMinAlpha);
         }

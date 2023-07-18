@@ -8,10 +8,8 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 
-import com.youth.banner.util.BannerUtils;
-
 public class RoundLinesIndicator extends BaseIndicator {
-
+    protected RectF rectF;
     public RoundLinesIndicator(Context context) {
         this(context, null);
     }
@@ -22,7 +20,12 @@ public class RoundLinesIndicator extends BaseIndicator {
 
     public RoundLinesIndicator(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        init();
         mPaint.setStyle(Paint.Style.FILL);
+    }
+    void init(){
+        mPaint.setColor(config.getNormalColor());
+        rectF = new RectF();
     }
 
     @Override
@@ -30,7 +33,7 @@ public class RoundLinesIndicator extends BaseIndicator {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int count = config.getIndicatorSize();
         if (count <= 1) return;
-        setMeasuredDimension((int) (config.getSelectedWidth() * count), config.getHeight());
+        setMeasuredDimension(config.getSelectedWidth() * count, config.getHeight());
     }
 
     @Override
@@ -38,14 +41,11 @@ public class RoundLinesIndicator extends BaseIndicator {
         super.onDraw(canvas);
         int count = config.getIndicatorSize();
         if (count <= 1) return;
-
-        mPaint.setColor(config.getNormalColor());
-        RectF oval = new RectF(0, 0, canvas.getWidth(), config.getHeight());
-        canvas.drawRoundRect(oval, config.getRadius(), config.getRadius(), mPaint);
-
-        mPaint.setColor(config.getSelectedColor());
+        rectF.set(0, 0, getWidth(), config.getHeight());
+        canvas.drawRoundRect(rectF, config.getRadius(), config.getRadius(), mPaint);
         int left = config.getCurrentPosition() * config.getSelectedWidth();
-        RectF rectF = new RectF(left, 0, left + config.getSelectedWidth(), config.getHeight());
+        mPaint.setColor(config.getSelectedColor());
+        rectF.set(left, 0, left + config.getSelectedWidth(), config.getHeight());
         canvas.drawRoundRect(rectF, config.getRadius(), config.getRadius(), mPaint);
     }
 }

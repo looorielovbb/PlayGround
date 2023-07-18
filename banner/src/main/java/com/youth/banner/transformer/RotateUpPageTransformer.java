@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+@SuppressWarnings("unused")
 public class RotateUpPageTransformer extends BasePageTransformer {
     private static final float DEFAULT_MAX_ROTATE = 15.0f;
     private float mMaxRotate = DEFAULT_MAX_ROTATE;
