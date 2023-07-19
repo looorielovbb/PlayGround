@@ -38,9 +38,9 @@ import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.listener.OnPageChangeListener;
 import com.youth.banner.transformer.MZScaleInTransformer;
 import com.youth.banner.transformer.ScaleInTransformer;
+import com.youth.banner.util.BannerLifecycleObserver;
 import com.youth.banner.util.BannerLifecycleObserverAdapter;
 import com.youth.banner.util.BannerUtils;
-import com.youth.banner.util.BannerLifecycleObserver;
 import com.youth.banner.util.ScrollSpeedManger;
 
 import java.lang.annotation.Retention;
@@ -145,6 +145,7 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
         mImagePaint.setXfermode(null);
     }
 
+    @SuppressWarnings("resource")
     private void initTypedArray(Context context, AttributeSet attrs) {
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Banner);

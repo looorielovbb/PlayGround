@@ -19,9 +19,14 @@ public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImage
         super(mData);
     }
 
-    @NonNull
     @Override
-    public BannerImageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public void onBindViewHolder(@NonNull BannerImageHolder holder, int position, @NonNull List<Object> payloads) {
+        int real = getRealPosition(position);
+        T data = mDatas.get(real);
+    }
+
+    @Override
+    public BannerImageHolder onCreateHolder(@NonNull ViewGroup parent, int viewType) {
         ImageView imageView = new ImageView(parent.getContext());
         //注意，必须设置为match_parent，这个是viewpager2强制要求的
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -29,8 +34,5 @@ public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImage
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         return new BannerImageHolder(imageView);
     }
-
-    @Override
-    public abstract void onBindViewHolder(@NonNull BannerImageHolder holder, int position, @NonNull List<Object> payloads);
 
 }

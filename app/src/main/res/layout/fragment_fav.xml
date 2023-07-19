@@ -9,6 +9,8 @@
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="180dp"
+        app:banner_auto_loop="true"
+        app:banner_infinite_loop="true"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.youth.banner.Banner
