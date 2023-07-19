@@ -3,7 +3,10 @@ package xyz.looorielovbb.playground.ui.favorite
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import com.youth.banner.indicator.RoundLinesIndicator
+import coil.load
+import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.holder.BannerImageHolder
+import com.youth.banner.indicator.CircleIndicator
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.FragmentFavBinding
@@ -27,8 +30,16 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
             banner.apply {
                 addBannerLifecycleObserver(this@FavFragment)
                 setBannerRound(20f)
-                indicator = RoundLinesIndicator(activity)
-                setAdapter(ImageAdapter(imageUrls))
+                indicator = CircleIndicator(activity)
+                setAdapter(object :BannerImageAdapter<String>(imageUrls){
+                    override fun onBindViewHolder(
+                        holder: BannerImageHolder,
+                        position: Int,
+                        payloads: MutableList<Any>
+                    ) {
+                        holder.imageView.load(imageUrls[position])
+                    }
+                })
             }
         }
     }

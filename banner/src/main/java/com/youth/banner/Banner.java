@@ -68,7 +68,7 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
     // 轮播切换时间
     private int mScrollTime = BannerConfig.SCROLL_TIME;
     // 轮播开始位置
-    private int mStartPosition = 1;
+    private int mStartPosition = 0;
     // banner圆角半径，默认没有圆角
     private float mBannerRadius = 0;
     // banner圆角方向，如果一个都不设置，默认四个角全部圆角
@@ -173,7 +173,6 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
             array.recycle();
         }
         setOrientation(mOrientation);
-        setInfiniteLoop();
     }
 
     private void initIndicatorAttr() {
