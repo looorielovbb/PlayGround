@@ -7,6 +7,7 @@ import coil.load
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
 import com.youth.banner.indicator.CircleIndicator
+import com.youth.banner.transformer.AlphaPageTransformer
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.FragmentFavBinding
@@ -38,9 +39,31 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
                         position: Int,
                         size: Int
                     ) {
-                        holder.imageView.load(imageUrls[position])
+                        holder.imageView.load(data)
                     }
                 })
+                //添加画廊效果
+                setBannerGalleryEffect(50, 10)
+                //(可以和其他PageTransformer组合使用，比如AlphaPageTransformer，注意但和其他带有缩放的PageTransformer会显示冲突)
+                //添加透明效果(画廊配合透明效果更棒)
+                addPageTransformer( AlphaPageTransformer())
+            }
+            banner2.apply {
+                addBannerLifecycleObserver(this@FavFragment)
+                setBannerRound(20f)
+                indicator = CircleIndicator(activity)
+                setAdapter(object :BannerImageAdapter<String>(imageUrls){
+                    override fun onBindView(
+                        holder: BannerImageHolder,
+                        data: String,
+                        position: Int,
+                        size: Int
+                    ) {
+                        holder.imageView.load(data)
+                    }
+                })
+                //添加魅族效果
+                setBannerGalleryMZ(16)
             }
         }
     }
