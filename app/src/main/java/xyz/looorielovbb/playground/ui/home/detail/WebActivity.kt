@@ -190,7 +190,7 @@ class WebActivity : AppCompatActivity() {
                 }
             }
             else ->{
-                Log.d(TAG, "wrong requestCode")
+                Log.e(TAG, "wrong requestCode")
             }
         }
     }

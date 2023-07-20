@@ -1,7 +1,6 @@
 package xyz.looorielovbb.playground.ui.favorite
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import coil.load
@@ -39,8 +38,6 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
                         position: Int,
                         size: Int
                     ) {
-                        Log.d("TAG", "onBindView: $position")
-                        Log.d("TAG", "onBindView: ${imageUrls[position]}")
                         holder.imageView.load(imageUrls[position])
                     }
                 })

@@ -11,7 +11,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
@@ -145,7 +144,6 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
         mImagePaint.setXfermode(null);
     }
 
-    @SuppressWarnings("resource")
     private void initTypedArray(Context context, AttributeSet attrs) {
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Banner);
@@ -686,7 +684,6 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
             getAdapter().setIncreaseCount(0);
         }
         getAdapter().registerAdapterDataObserver(mAdapterDataObserver);
-        Log.d("TAG", "banner setAdapter: ");
         mViewPager2.setAdapter(adapter);
         setCurrentItem(mStartPosition, false);
         initIndicator();
