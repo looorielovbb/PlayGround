@@ -9,7 +9,6 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
@@ -20,7 +19,6 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
@@ -215,7 +213,9 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
         if (!getViewPager2().isUserInputEnabled()) {
             return super.dispatchTouchEvent(ev);
         }
-
+//        switch (ev.getActionMasked()){
+//            case
+//        }
         int action = ev.getActionMasked();
         if (action == MotionEvent.ACTION_UP
                 || action == MotionEvent.ACTION_CANCEL
@@ -263,7 +263,7 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
     @Override
     protected void dispatchDraw(Canvas canvas) {
         if (mBannerRadius > 0) {
-            canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint, Canvas.ALL_SAVE_FLAG);
+            canvas.saveLayer(new RectF(0, 0, canvas.getWidth(), canvas.getHeight()), mImagePaint);
             super.dispatchDraw(canvas);
             //绘制外圆环边框圆环
             //默认四个角都设置
@@ -577,7 +577,6 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
 
     /**
      * 禁止手动滑动
-     *
      * @param enabled true 允许，false 禁止
      */
     public void setUserInputEnabled(boolean enabled) {
@@ -618,7 +617,6 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
 
     /**
      * 是否允许自动轮播
-     *
      * @param isAutoLoop ture 允许，false 不允许
      */
     public void isAutoLoop(boolean isAutoLoop) {
@@ -628,7 +626,6 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
 
     /**
      * 设置轮播间隔时间
-     *
      * @param loopTime 时间（毫秒）
      */
     public void setLoopTime(long loopTime) {
@@ -750,9 +747,7 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
 
     /**
      * 设置banner圆角
-     * <p>
      * 默认没有圆角，需要取消圆角把半径设置为0即可
-     *
      * @param radius 圆角半径
      */
     public void setBannerRound(float radius) {
@@ -762,14 +757,12 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
     /**
      * 设置banner圆角(第二种方式，和上面的方法不要同时使用)，只支持5.0以上
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void setBannerRound2(float radius) {
         BannerUtils.setBannerRound(this, radius);
     }
 
     /**
      * 为banner添加画廊效果
-     *
      * @param itemWidth  item左右展示的宽度,单位dp
      * @param pageMargin 页面间距,单位dp
      */
@@ -779,7 +772,6 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
 
     /**
      * 为banner添加画廊效果
-     *
      * @param leftItemWidth  item左展示的宽度,单位dp
      * @param rightItemWidth item右展示的宽度,单位dp
      * @param pageMargin     页面间距,单位dp
