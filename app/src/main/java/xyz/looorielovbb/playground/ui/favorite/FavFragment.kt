@@ -32,6 +32,7 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
                 addBannerLifecycleObserver(this@FavFragment)
                 setBannerRound(20f)
                 indicator = CircleIndicator(activity)
+                intercept = true
                 setAdapter(object :BannerImageAdapter<String>(imageUrls){
                     override fun onBindView(
                         holder: BannerImageHolder,
@@ -52,6 +53,7 @@ class FavFragment : Fragment(R.layout.fragment_fav) {
                 addBannerLifecycleObserver(this@FavFragment)
                 setBannerRound(20f)
                 indicator = CircleIndicator(activity)
+                intercept = true
                 setAdapter(object :BannerImageAdapter<String>(imageUrls){
                     override fun onBindView(
                         holder: BannerImageHolder,

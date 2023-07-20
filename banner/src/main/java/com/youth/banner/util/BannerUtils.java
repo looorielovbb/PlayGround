@@ -2,7 +2,6 @@ package com.youth.banner.util;
 
 import android.content.res.Resources;
 import android.graphics.Outline;
-import android.os.Build;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,6 @@ import android.view.ViewOutlineProvider;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 @SuppressWarnings("unused")
 public class BannerUtils {
@@ -20,8 +18,8 @@ public class BannerUtils {
      * 获取真正的位置
      *
      * @param isIncrease 首尾是否有增加
-     * @param position  当前位置
-     * @param realCount 真实数量
+     * @param position   当前位置
+     * @param realCount  真实数量
      */
     public static int getRealPosition(boolean isIncrease, int position, int realCount) {
         if (!isIncrease) {
@@ -60,8 +58,8 @@ public class BannerUtils {
     /**
      * 设置view圆角
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public static void setBannerRound(View view,float radius) {
+    public static void setBannerRound(View view, float radius) {
+
         view.setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {

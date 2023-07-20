@@ -536,6 +536,10 @@ public class Banner<T,VH extends RecyclerView.ViewHolder> extends FrameLayout im
         isIntercept = intercept;
     }
 
+    public boolean getIntercept(){
+        return isIntercept;
+    }
+
     /**
      * 跳转到指定位置（最好在设置了数据后在调用，不然没有意义）
      */
