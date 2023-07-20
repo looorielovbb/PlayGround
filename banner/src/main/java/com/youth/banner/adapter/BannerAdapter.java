@@ -69,13 +69,11 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
 
     @Override
     public final void onBindViewHolder(@NonNull VH holder, int position) {
-        Log.d("TAG", "onBindViewHolder: ===============");
         mViewHolder = holder;
         int real = getRealPosition(position);
         T data = mDatas.get(real);
         holder.itemView.setTag(R.id.banner_data_key, data);
         holder.itemView.setTag(R.id.banner_pos_key, real);
-        Log.d("TAG", "onBindViewHolder: ==============");
         onBindView(holder, mDatas.get(real), real, getRealCount());
         if (mOnBannerListener != null) {
             holder.itemView.setOnClickListener(view -> mOnBannerListener.OnBannerClick(data, real));

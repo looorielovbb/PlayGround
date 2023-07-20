@@ -13,16 +13,10 @@ import java.util.List;
  * 默认实现的图片适配器，图片加载需要自己实现
  */
 @SuppressWarnings("unused")
-public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImageHolder> {
+public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImageHolder>{
 
     public BannerImageAdapter(List<T> mData) {
         super(mData);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull BannerImageHolder holder, int position, @NonNull List<Object> payloads) {
-        int real = getRealPosition(position);
-        T data = mDatas.get(real);
     }
 
     @Override
