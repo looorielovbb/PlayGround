@@ -2,11 +2,12 @@ apply plugin: 'com.android.library'
 
 android {
     namespace 'com.youth.banner'
-    compileSdk 34
+    compileSdk 33
 
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        //noinspection OldTargetApi
+        targetSdk 33
         consumerProguardFiles 'proguard-rules.pro'
     }
 
@@ -21,8 +22,10 @@ android {
         abortOnError false
     }
 
-    tasks.withType(JavaCompile) {
-        options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
     }
 }
 
