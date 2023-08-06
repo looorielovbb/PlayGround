@@ -29,19 +29,23 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
     /**
      * 设置实体集合（可以在自己的adapter自定义，不一定非要使用）
      */
-    public void setDatas(@NonNull List<T> datas) {
+    public void setDatas(List<T> datas) {
+        if (datas == null) {
+            return;
+        }
         int lengthOld = mDatas.size();
-        if (datas.isEmpty()){
+        if (datas.isEmpty()) {
             mDatas.clear();
-            notifyItemRangeRemoved(0,lengthOld);
+            notifyItemRangeRemoved(0, lengthOld);
         } else {
             mDatas.addAll(datas);
-            notifyItemRangeInserted(0,datas.size());
+            notifyItemRangeInserted(0, datas.size());
         }
     }
 
     /**
      * 获取指定的实体（可以在自己的adapter自定义，不一定非要使用）
+     *
      * @param position 真实的position
      */
     public T getData(int position) {
@@ -50,6 +54,7 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
 
     /**
      * 获取指定的实体（可以在自己的adapter自定义，不一定非要使用）
+     *
      * @param position 这里传的position不是真实的，获取时转换了一次
      */
     public T getRealData(int position) {

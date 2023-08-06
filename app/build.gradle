@@ -21,6 +21,10 @@ android {
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     signingConfigs {
         debug {
             storeFile file('../looorielovbb.jks')
@@ -43,16 +47,16 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = '17'
     }
-    buildFeatures {
-        viewBinding true
-    }
+
 }
 
 dependencies {

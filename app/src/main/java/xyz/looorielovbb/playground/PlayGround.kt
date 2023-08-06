@@ -2,6 +2,7 @@ package xyz.looorielovbb.playground
 
 import android.app.Application
 import android.content.Context
+import com.google.android.material.color.DynamicColors
 import dagger.hilt.android.HiltAndroidApp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class PlayGround : Application() {
     override fun onCreate() {
         super.onCreate()
         application = this
+        DynamicColors.applyToActivitiesIfAvailable(this)
     }
 
     companion object {

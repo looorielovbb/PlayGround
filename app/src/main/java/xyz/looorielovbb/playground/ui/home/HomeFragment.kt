@@ -2,6 +2,7 @@ package xyz.looorielovbb.playground.ui.home
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -9,9 +10,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import coil.load
+import com.youth.banner.adapter.BannerImageAdapter
+import com.youth.banner.holder.BannerImageHolder
+import com.youth.banner.indicator.CircleIndicator
+import com.youth.banner.transformer.AlphaPageTransformer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
+import xyz.looorielovbb.playground.data.remote.ApiState
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
 import xyz.looorielovbb.playground.ext.binding
 import xyz.looorielovbb.playground.utils.DefaultItemDecoration
@@ -22,6 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding by binding(FragmentHomeBinding::bind)
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var pagingAdapter: HomeDelegateAdapter
+    private lateinit var bannerAdapter: BannerImageAdapter<String>
 
     companion object {
 //        const val TAG = "HomeFragment"
@@ -38,6 +46,25 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             recyclerView.addItemDecoration(dividerItemDecoration)
             swiper.setOnRefreshListener {
                 pagingAdapter.refresh()
+            }
+            bannerAdapter = object : BannerImageAdapter<String>(null) {
+                override fun onBindView(
+                    holder: BannerImageHolder,
+                    data: String,
+                    position: Int,
+                    size: Int
+                ) {
+                    holder.imageView.load(data)
+                }
+            }
+            banner.apply {
+                addBannerLifecycleObserver(this@HomeFragment)
+                setBannerRound(20f)
+                indicator = CircleIndicator(activity)
+                intercept = true
+                setAdapter(bannerAdapter)
+                setBannerGalleryEffect(50, 10)
+                addPageTransformer(AlphaPageTransformer())
             }
         }
         viewLifecycleOwner.lifecycleScope.launch {
@@ -59,8 +86,36 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 launch {
                     viewModel.articlesFlow.collect(pagingAdapter::submitData)
                 }
+                launch {
+                    viewModel.bannerData.collect { state ->
+                        when (state) {
+                            is ApiState.Loading -> {
+                                Toast.makeText(context, "加载中...", Toast.LENGTH_LONG).show()
+                            }
+
+                            is ApiState.Failure -> {
+                                Toast.makeText(
+                                    context,
+                                    "加载失败,原因：${state.e.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            is ApiState.Success -> {
+                                val listData: List<String> = state.data as List<String>
+                                bannerAdapter.setDatas(listData)
+                            }
+
+                            else -> {
+                                Toast.makeText(context, "异常", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                    }
+                }
             }
         }
+        viewModel.fetchBannerData()
     }
 
 }

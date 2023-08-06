@@ -1,6 +1,9 @@
 package xyz.looorielovbb.playground.pojo
 
-data class ListData<T>(
+/**
+ * 列表基类
+ */
+data class LR<T>(
     val curPage: Int,
     val datas: List<T>,
     val offset: Int,
