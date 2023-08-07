@@ -9,7 +9,6 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
@@ -32,7 +31,6 @@ import com.youth.banner.adapter.BannerAdapter;
 import com.youth.banner.config.BannerConfig;
 import com.youth.banner.config.IndicatorConfig;
 import com.youth.banner.indicator.Indicator;
-import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.listener.OnPageChangeListener;
 import com.youth.banner.transformer.MZScaleInTransformer;
 import com.youth.banner.transformer.ScaleInTransformer;
@@ -46,7 +44,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
 import java.util.List;
 
-@SuppressWarnings("unused")
+/**
+ * @noinspection unused
+ */
 public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout implements BannerLifecycleObserver {
     public static final int INVALID_VALUE = -1;
     private ViewPager2 mViewPager2;
@@ -104,14 +104,30 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
 
     private void initTypedArray(Context context, AttributeSet attrs) {
         if (attrs != null) {
-            if (Build.VERSION.SDK_INT > 31) {
-                try (TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Banner)) {
-                    init(array);
-                }
-            } else {
-                TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Banner);
-                init(array);
-            }
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.Banner);
+            mBannerRadius = array.getDimensionPixelSize(R.styleable.Banner_banner_radius, 0);
+            mLoopTime = array.getInt(R.styleable.Banner_banner_loop_time, BannerConfig.LOOP_TIME);
+            mIsAutoLoop = array.getBoolean(R.styleable.Banner_banner_auto_loop, BannerConfig.IS_AUTO_LOOP);
+            mIsInfiniteLoop = array.getBoolean(R.styleable.Banner_banner_infinite_loop, BannerConfig.IS_INFINITE_LOOP);
+            normalWidth = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_normal_width, BannerConfig.INDICATOR_NORMAL_WIDTH);
+            selectedWidth = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_selected_width, BannerConfig.INDICATOR_SELECTED_WIDTH);
+            normalColor = array.getColor(R.styleable.Banner_banner_indicator_normal_color, BannerConfig.INDICATOR_NORMAL_COLOR);
+            selectedColor = array.getColor(R.styleable.Banner_banner_indicator_selected_color, BannerConfig.INDICATOR_SELECTED_COLOR);
+            indicatorGravity = array.getInt(R.styleable.Banner_banner_indicator_gravity, IndicatorConfig.Direction.CENTER);
+            indicatorSpace = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_space, 0);
+            indicatorMargin = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_margin, 0);
+            indicatorMarginLeft = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginLeft, 0);
+            indicatorMarginTop = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginTop, 0);
+            indicatorMarginRight = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginRight, 0);
+            indicatorMarginBottom = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginBottom, 0);
+            indicatorHeight = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_height, BannerConfig.INDICATOR_HEIGHT);
+            indicatorRadius = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_radius, BannerConfig.INDICATOR_RADIUS);
+            mOrientation = array.getInt(R.styleable.Banner_banner_orientation, HORIZONTAL);
+            mRoundTopLeft = array.getBoolean(R.styleable.Banner_banner_round_top_left, false);
+            mRoundTopRight = array.getBoolean(R.styleable.Banner_banner_round_top_right, false);
+            mRoundBottomLeft = array.getBoolean(R.styleable.Banner_banner_round_bottom_left, false);
+            mRoundBottomRight = array.getBoolean(R.styleable.Banner_banner_round_bottom_right, false);
+            array.recycle();
         }
         setOrientation(mOrientation);
     }
@@ -150,32 +166,6 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
         mRoundPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OUT));
         mImagePaint = new Paint();
         mImagePaint.setXfermode(null);
-    }
-
-    private void init(TypedArray array) {
-        mBannerRadius = array.getDimensionPixelSize(R.styleable.Banner_banner_radius, 0);
-        mLoopTime = array.getInt(R.styleable.Banner_banner_loop_time, BannerConfig.LOOP_TIME);
-        mIsAutoLoop = array.getBoolean(R.styleable.Banner_banner_auto_loop, BannerConfig.IS_AUTO_LOOP);
-        mIsInfiniteLoop = array.getBoolean(R.styleable.Banner_banner_infinite_loop, BannerConfig.IS_INFINITE_LOOP);
-        normalWidth = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_normal_width, BannerConfig.INDICATOR_NORMAL_WIDTH);
-        selectedWidth = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_selected_width, BannerConfig.INDICATOR_SELECTED_WIDTH);
-        normalColor = array.getColor(R.styleable.Banner_banner_indicator_normal_color, BannerConfig.INDICATOR_NORMAL_COLOR);
-        selectedColor = array.getColor(R.styleable.Banner_banner_indicator_selected_color, BannerConfig.INDICATOR_SELECTED_COLOR);
-        indicatorGravity = array.getInt(R.styleable.Banner_banner_indicator_gravity, IndicatorConfig.Direction.CENTER);
-        indicatorSpace = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_space, 0);
-        indicatorMargin = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_margin, 0);
-        indicatorMarginLeft = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginLeft, 0);
-        indicatorMarginTop = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginTop, 0);
-        indicatorMarginRight = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginRight, 0);
-        indicatorMarginBottom = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_marginBottom, 0);
-        indicatorHeight = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_height, BannerConfig.INDICATOR_HEIGHT);
-        indicatorRadius = array.getDimensionPixelSize(R.styleable.Banner_banner_indicator_radius, BannerConfig.INDICATOR_RADIUS);
-        mOrientation = array.getInt(R.styleable.Banner_banner_orientation, HORIZONTAL);
-        mRoundTopLeft = array.getBoolean(R.styleable.Banner_banner_round_top_left, false);
-        mRoundTopRight = array.getBoolean(R.styleable.Banner_banner_round_top_right, false);
-        mRoundBottomLeft = array.getBoolean(R.styleable.Banner_banner_round_bottom_left, false);
-        mRoundBottomRight = array.getBoolean(R.styleable.Banner_banner_round_bottom_right, false);
-        array.recycle();
     }
 
     @Override
@@ -706,15 +696,6 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
      */
     public void setOrientation(@Orientation int orientation) {
         getViewPager2().setOrientation(orientation);
-    }
-
-    /**
-     * 设置点击事件
-     */
-    public void setOnBannerListener(OnBannerListener<T> listener) {
-        if (getAdapter() != null) {
-            getAdapter().setOnBannerListener(listener);
-        }
     }
 
     /**

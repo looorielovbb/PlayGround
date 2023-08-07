@@ -10,10 +10,10 @@
         <item name="colorSurface">@color/white</item>
         <item name="colorOnSurface">@color/blue_gray_500</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/blue_gray_500</item>
+        <item name="colorSecondary">@color/indigo_a200</item>
         <item name="colorOnSecondary">@color/blue_gray_100</item>
         <item name="colorSecondaryContainer">@color/blue_gray_50</item>
-        <item name="colorOnSecondaryContainer">@color/blue_gray_300</item>
+        <item name="colorOnSecondaryContainer">@color/indigo_a400</item>
 
         <item name="colorError">@color/red_500</item>
         <item name="colorErrorContainer">@color/red_100</item>

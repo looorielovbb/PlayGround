@@ -1,5 +1,6 @@
 package xyz.looorielovbb.playground.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -21,6 +22,8 @@ import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.data.remote.ApiState
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
 import xyz.looorielovbb.playground.ext.binding
+import xyz.looorielovbb.playground.pojo.BannerData
+import xyz.looorielovbb.playground.ui.home.detail.WebActivity
 import xyz.looorielovbb.playground.utils.DefaultItemDecoration
 
 @AndroidEntryPoint
@@ -29,7 +32,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val binding by binding(FragmentHomeBinding::bind)
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var pagingAdapter: HomeDelegateAdapter
-    private lateinit var bannerAdapter: BannerImageAdapter<String>
+    private lateinit var bannerAdapter: BannerImageAdapter<BannerData>
 
     companion object {
 //        const val TAG = "HomeFragment"
@@ -47,23 +50,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             swiper.setOnRefreshListener {
                 pagingAdapter.refresh()
             }
-            bannerAdapter = object : BannerImageAdapter<String>(null) {
+            bannerAdapter = object : BannerImageAdapter<BannerData>() {
                 override fun onBindView(
                     holder: BannerImageHolder,
-                    data: String,
+                    data: BannerData,
                     position: Int,
                     size: Int
                 ) {
-                    holder.imageView.load(data)
+                    holder.imageView.load(data.imagePath)
+                    holder.itemView.setOnClickListener {
+                        if (data.url.isNotBlank()) {
+                            val intent = Intent(requireActivity(), WebActivity::class.java)
+                            intent.putExtra("link", data.url)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(context, "无地址", Toast.LENGTH_LONG).show()
+                        }
+                    }
                 }
             }
             banner.apply {
-                addBannerLifecycleObserver(this@HomeFragment)
+                addBannerLifecycleObserver(viewLifecycleOwner)
                 setBannerRound(20f)
                 indicator = CircleIndicator(activity)
                 intercept = true
                 setAdapter(bannerAdapter)
-                setBannerGalleryEffect(50, 10)
+                //添加魅族效果
+                setBannerGalleryMZ(16)
                 addPageTransformer(AlphaPageTransformer())
             }
         }
@@ -102,7 +115,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             }
 
                             is ApiState.Success -> {
-                                val listData: List<String> = state.data as List<String>
+                                val listData: List<BannerData> = state.data as List<BannerData>
                                 bannerAdapter.setDatas(listData)
                             }
 
@@ -110,7 +123,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 Toast.makeText(context, "异常", Toast.LENGTH_LONG).show()
                             }
                         }
-
                     }
                 }
             }

@@ -29,9 +29,7 @@ class HomeViewModel @Inject constructor(private val wanRepository: WanRepository
                 bannerData.value = ApiState.Failure(it)
             }
             .mapNotNull {
-                it.map { obj ->
-                    obj.imagePath
-                }
+                it
             }
             .collect {
                 bannerData.value = ApiState.Success(it)

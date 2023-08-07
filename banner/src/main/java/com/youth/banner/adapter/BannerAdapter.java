@@ -9,30 +9,30 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.youth.banner.R;
 import com.youth.banner.config.BannerConfig;
 import com.youth.banner.holder.IViewHolder;
-import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.util.BannerUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
+/**
+ * @noinspection unused
+ */
 public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements IViewHolder<T, VH> {
     protected List<T> mDatas = new ArrayList<>();
-    private OnBannerListener<T> mOnBannerListener;
     private VH mViewHolder;
     private int mIncreaseCount = BannerConfig.INCREASE_COUNT;
 
-    public BannerAdapter(List<T> datas) {
+    public BannerAdapter(@NonNull List<T> datas) {
         setDatas(datas);
+    }
+
+    public BannerAdapter() {
     }
 
     /**
      * 设置实体集合（可以在自己的adapter自定义，不一定非要使用）
      */
-    public void setDatas(List<T> datas) {
-        if (datas == null) {
-            return;
-        }
+    public void setDatas(@NonNull List<T> datas) {
         int lengthOld = mDatas.size();
         if (datas.isEmpty()) {
             mDatas.clear();
@@ -75,9 +75,7 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
         holder.itemView.setTag(R.id.banner_data_key, data);
         holder.itemView.setTag(R.id.banner_pos_key, real);
         onBindView(holder, mDatas.get(real), real, getRealCount());
-        if (mOnBannerListener != null) {
-            holder.itemView.setOnClickListener(view -> mOnBannerListener.OnBannerClick(data, real));
-        }
+
     }
 
     @Override
@@ -91,10 +89,6 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
 
     public int getRealPosition(int position) {
         return BannerUtils.getRealPosition(mIncreaseCount == BannerConfig.INCREASE_COUNT, position, getRealCount());
-    }
-
-    public void setOnBannerListener(OnBannerListener<T> listener) {
-        this.mOnBannerListener = listener;
     }
 
     public VH getViewHolder() {

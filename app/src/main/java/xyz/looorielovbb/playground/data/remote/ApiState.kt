@@ -1,8 +1,8 @@
 package xyz.looorielovbb.playground.data.remote
 
 sealed class ApiState {
-    object Loading : ApiState()
+    data object Loading : ApiState()
     class Failure(val e: Throwable) : ApiState()
     class Success(val data: Any) : ApiState()
-    object Empty : ApiState()
+    data object Empty : ApiState()
 }

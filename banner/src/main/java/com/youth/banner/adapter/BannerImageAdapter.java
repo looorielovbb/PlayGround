@@ -12,11 +12,17 @@ import java.util.List;
 /**
  * 默认实现的图片适配器，图片加载需要自己实现
  */
-@SuppressWarnings("unused")
-public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImageHolder>{
+public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImageHolder> {
 
-    public BannerImageAdapter(List<T> mData) {
-        super(mData);
+    /**
+     * @noinspection unused
+     */
+    public BannerImageAdapter(@NonNull List<T> mDatas) {
+        super(mDatas);
+    }
+
+    public BannerImageAdapter() {
+        super();
     }
 
     @Override
@@ -25,7 +31,7 @@ public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImage
         //注意，必须设置为match_parent，这个是viewpager2强制要求的
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         imageView.setLayoutParams(params);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         return new BannerImageHolder(imageView);
     }
 
