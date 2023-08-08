@@ -2,12 +2,11 @@ apply plugin: 'com.android.library'
 
 android {
     namespace 'com.youth.banner'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 21
-        //noinspection OldTargetApi
-        targetSdk 33
+        targetSdk 34
         consumerProguardFiles 'proguard-rules.pro'
     }
 
