@@ -5,7 +5,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -21,9 +20,9 @@ class NetWorkModule {
     @Singleton
     fun bindClient(): OkHttpClient =
         OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                setLevel(HttpLoggingInterceptor.Level.BASIC)
-            })
+//            .addInterceptor(HttpLoggingInterceptor().apply {
+//                setLevel(HttpLoggingInterceptor.Level.BASIC)
+//            })
             .build()
 
     @Provides

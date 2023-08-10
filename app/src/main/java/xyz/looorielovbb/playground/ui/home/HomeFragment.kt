@@ -19,7 +19,6 @@ import com.youth.banner.transformer.AlphaPageTransformer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
-import xyz.looorielovbb.playground.data.remote.ApiState
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
 import xyz.looorielovbb.playground.ext.binding
 import xyz.looorielovbb.playground.pojo.BannerData
@@ -49,6 +48,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             recyclerView.addItemDecoration(dividerItemDecoration)
             swiper.setOnRefreshListener {
                 pagingAdapter.refresh()
+                viewModel.fetchBannerData()
             }
             bannerAdapter = object : BannerImageAdapter<BannerData>() {
                 override fun onBindView(
@@ -89,11 +89,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             is LoadState.Error -> binding.swiper.isRefreshing = false
                             is LoadState.NotLoading -> binding.swiper.isRefreshing = false
                         }
-                        when (it.append) {
-                            is LoadState.Loading -> binding.bar.visibility = View.VISIBLE
-                            is LoadState.Error -> binding.bar.visibility = View.GONE
-                            is LoadState.NotLoading -> binding.bar.visibility = View.GONE
-                        }
                     }
                 }
                 launch {
@@ -102,11 +97,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 launch {
                     viewModel.bannerData.collect { state ->
                         when (state) {
-                            is ApiState.Loading -> {
+                            is HomeState.Loading -> {
                                 Toast.makeText(context, "加载中...", Toast.LENGTH_LONG).show()
                             }
 
-                            is ApiState.Failure -> {
+                            is HomeState.Failure -> {
                                 Toast.makeText(
                                     context,
                                     "加载失败,原因：${state.e.message}",
@@ -114,13 +109,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                                 ).show()
                             }
 
-                            is ApiState.Success -> {
-                                val listData: List<BannerData> = state.data as List<BannerData>
+                            is HomeState.Success -> {
+                                val listData: List<BannerData> = state.data
                                 bannerAdapter.setDatas(listData)
-                            }
-
-                            else -> {
-                                Toast.makeText(context, "异常", Toast.LENGTH_LONG).show()
                             }
                         }
                     }

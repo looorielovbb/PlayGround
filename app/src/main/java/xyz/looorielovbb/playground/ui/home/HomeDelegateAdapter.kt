@@ -16,7 +16,7 @@ class HomeDelegateAdapter : BindingViewDelegate<Article, ItemArticleBinding>(
         item?.let { article ->
             val leftTitle = if (article.author.isNotEmpty()) "作者:%s" else "分享人:%s"
             with(binding) {
-                binding.root.setOnClickListener { view ->
+                root.setOnClickListener { view ->
                     val intent = Intent(view.context, WebActivity::class.java)
                     intent.putExtra("link", article.link)
                     view.context.startActivity(intent)
