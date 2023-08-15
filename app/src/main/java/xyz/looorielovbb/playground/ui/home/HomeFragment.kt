@@ -10,12 +10,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.youth.banner.adapter.BannerImageAdapter
 import com.youth.banner.holder.BannerImageHolder
-import com.youth.banner.indicator.CircleIndicator
-import com.youth.banner.transformer.AlphaPageTransformer
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
@@ -32,6 +31,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private val viewModel by viewModels<HomeViewModel>()
     private lateinit var pagingAdapter: HomeDelegateAdapter
     private lateinit var bannerAdapter: BannerImageAdapter<BannerData>
+    private lateinit var headAdapter: BannerHeadAdapter
+    private lateinit var concatAdapter: ConcatAdapter
 
     companion object {
 //        const val TAG = "HomeFragment"
@@ -39,11 +40,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        pagingAdapter = HomeDelegateAdapter()
-        val layoutManager = LinearLayoutManager(context)
-        val dividerItemDecoration = DefaultItemDecoration()
+
+
         with(binding) {
-            recyclerView.adapter = pagingAdapter
+            val layoutManager = LinearLayoutManager(context)
+            val dividerItemDecoration = DefaultItemDecoration()
             recyclerView.layoutManager = layoutManager
             recyclerView.addItemDecoration(dividerItemDecoration)
             swiper.setOnRefreshListener {
@@ -69,16 +70,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
             }
-            banner.apply {
-                addBannerLifecycleObserver(viewLifecycleOwner)
-                setBannerRound(20f)
-                indicator = CircleIndicator(activity)
-                intercept = true
-                setAdapter(bannerAdapter)
-                //添加魅族效果
-                setBannerGalleryMZ(16)
-                addPageTransformer(AlphaPageTransformer())
-            }
+            concatAdapter = ConcatAdapter()
+            pagingAdapter = HomeDelegateAdapter()
+            headAdapter = BannerHeadAdapter(bannerAdapter, this@HomeFragment)
+            concatAdapter.addAdapter(headAdapter)
+            concatAdapter.addAdapter(pagingAdapter)
+            recyclerView.adapter = concatAdapter
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -98,18 +95,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     viewModel.bannerData.collect { state ->
                         when (state) {
                             is HomeState.Loading -> {
-                                Toast.makeText(context, "加载中...", Toast.LENGTH_LONG).show()
+                                binding.swiper.isRefreshing = true
                             }
 
                             is HomeState.Failure -> {
-                                Toast.makeText(
-                                    context,
-                                    "加载失败,原因：${state.e.message}",
-                                    Toast.LENGTH_LONG
-                                ).show()
+                                binding.swiper.isRefreshing = false
                             }
 
                             is HomeState.Success -> {
+                                binding.swiper.isRefreshing = true
                                 val listData: List<BannerData> = state.data
                                 bannerAdapter.setDatas(listData)
                             }

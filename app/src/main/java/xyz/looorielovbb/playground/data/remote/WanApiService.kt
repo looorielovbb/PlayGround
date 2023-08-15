@@ -5,6 +5,7 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import xyz.looorielovbb.playground.pojo.Article
 import xyz.looorielovbb.playground.pojo.BannerData
+import xyz.looorielovbb.playground.pojo.Hotkey
 import xyz.looorielovbb.playground.pojo.LR
 import xyz.looorielovbb.playground.pojo.RP
 
@@ -27,5 +28,12 @@ interface WanApiService {
      */
     @GET("banner/json")
     suspend fun getBanner(): RP<List<BannerData>>
+
+    /**
+     * 搜索热词 https://www.wanandroid.com/hotkey/json
+     * 数据类型
+     */
+    @GET("hotkey/json")
+    suspend fun getHotKey(): RP<List<Hotkey>>
 
 }

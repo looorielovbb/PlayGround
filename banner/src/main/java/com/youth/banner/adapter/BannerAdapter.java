@@ -87,6 +87,10 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
         return mDatas == null ? 0 : mDatas.size();
     }
 
+    public List<T> getDatas() {
+        return mDatas;
+    }
+
     public int getRealPosition(int position) {
         return BannerUtils.getRealPosition(mIncreaseCount == BannerConfig.INCREASE_COUNT, position, getRealCount());
     }

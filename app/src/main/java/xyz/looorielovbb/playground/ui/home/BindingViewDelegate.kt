@@ -12,18 +12,23 @@ abstract class BindingViewDelegate<T : Any, VB : ViewBinding>(
     diffCallback: DiffUtil.ItemCallback<T>
 ) : PagingDataAdapter<T, BindingViewDelegate.BindingViewHolder<VB>>(diffCallback) {
 
+    protected lateinit var binding: VB
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): BindingViewHolder<VB> =
-        BindingViewHolder(inflate(LayoutInflater.from(parent.context), parent, false))
-
-    override fun onBindViewHolder(holder: BindingViewHolder<VB>, position: Int) {
-        onBindViewHolder(holder.binding, position)
+    ): BindingViewHolder<VB> {
+        binding = inflate(LayoutInflater.from(parent.context), parent, false)
+        return BindingViewHolder(binding)
     }
 
-    abstract fun onBindViewHolder(binding: VB, position: Int)
 
-    class BindingViewHolder<VB : ViewBinding>(val binding: VB) :
+    override fun onBindViewHolder(holder: BindingViewHolder<VB>, position: Int) {
+        onBindViewHolder(position)
+    }
+
+    abstract fun onBindViewHolder(position: Int)
+
+    class BindingViewHolder<VB : ViewBinding>(binding: VB) :
         RecyclerView.ViewHolder(binding.root)
 }

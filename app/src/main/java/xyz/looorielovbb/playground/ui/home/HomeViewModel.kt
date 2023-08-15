@@ -17,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val wanRepository: WanRepository) : ViewModel() {
 
-
     val articlesFlow = wanRepository.fetchArticles().flowOn(Dispatchers.IO).cachedIn(viewModelScope)
 
     val bannerData: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Loading)
