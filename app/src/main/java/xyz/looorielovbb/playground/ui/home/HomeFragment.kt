@@ -38,13 +38,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 //        const val TAG = "HomeFragment"
     }
 
+    private val layoutManager = LinearLayoutManager(context)
+    private val dividerItemDecoration = DefaultItemDecoration()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
         with(binding) {
-            val layoutManager = LinearLayoutManager(context)
-            val dividerItemDecoration = DefaultItemDecoration()
             recyclerView.layoutManager = layoutManager
             recyclerView.addItemDecoration(dividerItemDecoration)
             swiper.setOnRefreshListener {
@@ -103,7 +102,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             }
 
                             is HomeState.Success -> {
-                                binding.swiper.isRefreshing = true
+                                binding.swiper.isRefreshing = false
                                 val listData: List<BannerData> = state.data
                                 bannerAdapter.setDatas(listData)
                             }
