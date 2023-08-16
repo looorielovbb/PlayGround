@@ -28,13 +28,11 @@ public class RotateUpPageTransformer extends BasePageTransformer {
             // Modify the default slide transition to shrink the page as well
             if (position < 0) {//[0，-1]
                 view.setPivotX(view.getWidth() * (0.5f + 0.5f * (-position)));
-                view.setPivotY(0);
-                view.setRotation(-mMaxRotate * position);
             } else {//[1,0]
                 view.setPivotX(view.getWidth() * 0.5f * (1 - position));
-                view.setPivotY(0);
-                view.setRotation(-mMaxRotate * position);
             }
+            view.setPivotY(0);
+            view.setRotation(-mMaxRotate * position);
         } else { // (1,+Infinity]
             // This page is way off-screen to the right.
             // ViewHelper.setRotation(view, ROT_MAX);

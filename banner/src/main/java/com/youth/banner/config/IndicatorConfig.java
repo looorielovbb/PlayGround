@@ -36,10 +36,10 @@ public class IndicatorConfig {
     }
 
     public static class Margins {
-        public int leftMargin;
-        public int topMargin;
-        public int rightMargin;
-        public int bottomMargin;
+        public final int leftMargin;
+        public final int topMargin;
+        public final int rightMargin;
+        public final int bottomMargin;
 
         public Margins() {
             this(BannerConfig.INDICATOR_MARGIN);

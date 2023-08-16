@@ -18,8 +18,8 @@ import com.youth.banner.R;
  */
 @SuppressWarnings("unused")
 public class DrawableIndicator extends BaseIndicator {
-    private Bitmap normalBitmap;
-    private Bitmap selectedBitmap;
+    private final Bitmap normalBitmap;
+    private final Bitmap selectedBitmap;
 
     /**
      * 实例化Drawable指示器 ，也可以通过自定义属性设置
@@ -41,15 +41,11 @@ public class DrawableIndicator extends BaseIndicator {
     public DrawableIndicator(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.DrawableIndicator);
-        if (array != null) {
-            BitmapDrawable normal = (BitmapDrawable) array.getDrawable(R.styleable.DrawableIndicator_normal_drawable);
-            BitmapDrawable selected = (BitmapDrawable) array.getDrawable(R.styleable.DrawableIndicator_selected_drawable);
-            normalBitmap = normal.getBitmap();
-            selectedBitmap = selected.getBitmap();
-        }
-        if (array != null) {
-            array.recycle();
-        }
+        BitmapDrawable normal = (BitmapDrawable) array.getDrawable(R.styleable.DrawableIndicator_normal_drawable);
+        BitmapDrawable selected = (BitmapDrawable) array.getDrawable(R.styleable.DrawableIndicator_selected_drawable);
+        normalBitmap = normal != null ? normal.getBitmap() : null;
+        selectedBitmap = selected != null ? selected.getBitmap() : null;
+        array.recycle();
     }
 
     @Override

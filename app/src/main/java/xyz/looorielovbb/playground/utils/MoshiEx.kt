@@ -35,13 +35,11 @@ object MoshiEx {
     }
 
     inline fun <reified T> getGenericType(): Type {
-        val type =
-            object :
-                MoshiTypeReference<T>() {}::class.java
-                .genericSuperclass
-                .let { it as ParameterizedType }
-                .actualTypeArguments
-                .first()
-        return type
+        return object :
+            MoshiTypeReference<T>() {}::class.java
+            .genericSuperclass
+            .let { it as ParameterizedType }
+            .actualTypeArguments
+            .first()
     }
 }

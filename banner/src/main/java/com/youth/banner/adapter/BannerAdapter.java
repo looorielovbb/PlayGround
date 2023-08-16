@@ -18,7 +18,7 @@ import java.util.List;
  * @noinspection unused
  */
 public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> implements IViewHolder<T, VH> {
-    protected List<T> mDatas = new ArrayList<>();
+    protected final List<T> mDatas = new ArrayList<>();
     private VH mViewHolder;
     private int mIncreaseCount = BannerConfig.INCREASE_COUNT;
 
@@ -84,7 +84,7 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
     }
 
     public int getRealCount() {
-        return mDatas == null ? 0 : mDatas.size();
+        return mDatas.size();
     }
 
     public List<T> getDatas() {

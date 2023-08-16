@@ -28,13 +28,11 @@ public class RotateDownPageTransformer extends BasePageTransformer {
         } else if (position <= 1) { // [-1,1]
             if (position < 0) {//[0，-1]
                 view.setPivotX(view.getWidth() * (DEFAULT_CENTER + DEFAULT_CENTER * (-position)));
-                view.setPivotY(view.getHeight());
-                view.setRotation(mMaxRotate * position);
             } else {//[1,0]
                 view.setPivotX(view.getWidth() * DEFAULT_CENTER * (1 - position));
-                view.setPivotY(view.getHeight());
-                view.setRotation(mMaxRotate * position);
             }
+            view.setPivotY(view.getHeight());
+            view.setRotation(mMaxRotate * position);
         } else {
             // (1,+Infinity]
             // This page is way off-screen to the right.

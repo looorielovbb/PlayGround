@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public
 class BannerImageHolder extends RecyclerView.ViewHolder {
-    public ImageView imageView;
+    public final ImageView imageView;
 
     public BannerImageHolder(@NonNull View view) {
         super(view);

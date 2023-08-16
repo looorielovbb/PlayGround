@@ -15,8 +15,8 @@ import androidx.annotation.Nullable;
 import com.youth.banner.config.IndicatorConfig;
 
 public class BaseIndicator extends View implements Indicator {
-    protected IndicatorConfig config;
-    protected Paint mPaint;
+    protected final IndicatorConfig config;
+    protected final Paint mPaint;
     protected float offset;
 
     public BaseIndicator(Context context) {

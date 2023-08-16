@@ -1,5 +1,3 @@
-@file:Suppress("unused")
-
 package xyz.looorielovbb.playground.ext
 
 import android.view.View
