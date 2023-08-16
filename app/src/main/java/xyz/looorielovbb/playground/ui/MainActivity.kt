@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         with(binding) {
             with(viewpager2) {
+                viewpager2.isUserInputEnabled = false
                 orientation = ViewPager2.ORIENTATION_HORIZONTAL
                 offscreenPageLimit = 3
                 adapter = object : FragmentStateAdapter(this@MainActivity) {
