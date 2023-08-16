@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.youth.banner.adapter.BannerImageAdapter
-import com.youth.banner.holder.BannerImageHolder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
@@ -59,12 +58,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 ) {
                     holder.imageView.load(data.imagePath)
                     holder.itemView.setOnClickListener {
-                        if (data.url.isNotBlank()) {
-                            val intent = Intent(requireActivity(), WebActivity::class.java)
-                            intent.putExtra("link", data.url)
-                            startActivity(intent)
-                        } else {
-                            Toast.makeText(context, "无地址", Toast.LENGTH_LONG).show()
+                        data.let {
+                            if (it.url.isNotBlank()) {
+                                val intent = Intent(requireActivity(), WebActivity::class.java)
+                                intent.putExtra("link", it.url)
+                                startActivity(intent)
+                            } else {
+                                Toast.makeText(context, "无地址", Toast.LENGTH_LONG).show()
+                            }
                         }
                     }
                 }

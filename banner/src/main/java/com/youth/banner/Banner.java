@@ -42,17 +42,17 @@ import com.youth.banner.util.ScrollSpeedManger;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
-import java.util.List;
+
 
 /**
  * @noinspection unused
  */
-public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout implements BannerLifecycleObserver {
+public class Banner extends FrameLayout implements BannerLifecycleObserver {
     public static final int INVALID_VALUE = -1;
     private ViewPager2 mViewPager2;
-    private AutoLoopTask<T, VH> mLoopTask;
+    private AutoLoopTask mLoopTask;
     private OnPageChangeListener mOnPageChangeListener;
-    private BannerAdapter<T, VH> mAdapter;
+    private BannerAdapter<?, ? extends RecyclerView.ViewHolder> mAdapter;
     private Indicator mIndicator;
     private CompositePageTransformer mCompositePageTransformer;
     private BannerOnPageChangeCallback mPageChangeCallback;
@@ -150,7 +150,7 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop() / 2;
         mCompositePageTransformer = new CompositePageTransformer();
         mPageChangeCallback = new BannerOnPageChangeCallback();
-        mLoopTask = new AutoLoopTask<>(this);
+        mLoopTask = new AutoLoopTask(this);
         mViewPager2 = new ViewPager2(context);
         mViewPager2.setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mViewPager2.setOffscreenPageLimit(2);
@@ -408,7 +408,7 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
 
     }
 
-    public BannerAdapter<T, VH> getAdapter() {
+    public BannerAdapter<?, ? extends RecyclerView.ViewHolder> getAdapter() {
         return mAdapter;
     }
 
@@ -451,10 +451,7 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
     /**
      * 设置banner的适配器
      */
-    public void setAdapter(BannerAdapter<T, VH> adapter) {
-        if (adapter == null) {
-            throw new NullPointerException(getContext().getString(R.string.banner_adapter_null_error));
-        }
+    public void setAdapter(@NonNull BannerAdapter<?, ? extends RecyclerView.ViewHolder> adapter) {
         this.mAdapter = adapter;
         if (!isInfiniteLoop()) {
             getAdapter().setIncreaseCount(0);
@@ -516,10 +513,9 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
      */
     public int getRealCount() {
         if (getAdapter() != null) {
-            return getAdapter().getRealCount();
+            return getAdapter().getBannerCount();
         }
         return 0;
-
     }
 
     /**
@@ -531,7 +527,6 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
 
     /**
      * 禁止手动滑动
-     *
      * @param enabled true 允许，false 禁止
      */
     public void setUserInputEnabled(boolean enabled) {
@@ -579,7 +574,6 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
 
     /**
      * 是否允许自动轮播
-     *
      * @param isAutoLoop ture 允许，false 不允许
      */
     public void isAutoLoop(boolean isAutoLoop) {
@@ -620,7 +614,6 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
 
     /**
      * 设置轮播间隔时间
-     *
      * @param loopTime 时间（毫秒）
      */
     public void setLoopTime(long loopTime) {
@@ -632,7 +625,7 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
      *
      * @param isInfiniteLoop 是否支持无限循环
      */
-    public void setAdapter(BannerAdapter<T, VH> adapter, boolean isInfiniteLoop) {
+    public void setAdapter(BannerAdapter<?, ? extends RecyclerView.ViewHolder> adapter, boolean isInfiniteLoop) {
         mIsInfiniteLoop = isInfiniteLoop;
         setInfiniteLoop();
         setAdapter(adapter);
@@ -676,22 +669,7 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
     }
 
     /**
-     * 重新设置banner数据，当然你也可以在你adapter中自己操作数据,不要过于局限在这个方法，举一反三哈
-     *
-     * @param datas 数据集合，当传null或者datas没有数据时，banner会变成空白的，请做好占位UI处理
-     */
-    public void setDatas(List<T> datas) {
-        if (getAdapter() != null) {
-            getAdapter().setDatas(datas);
-            setCurrentItem(mStartPosition, false);
-            setIndicatorPageChange();
-            start();
-        }
-    }
-
-    /**
      * 设置banner轮播方向
-     *
      * @param orientation {@link Orientation}
      */
     public void setOrientation(@Orientation int orientation) {
@@ -739,7 +717,6 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
 
     /**
      * 为banner添加画廊效果
-     *
      * @param leftItemWidth  item左展示的宽度,单位dp
      * @param rightItemWidth item右展示的宽度,单位dp
      * @param pageMargin     页面间距,单位dp
@@ -760,16 +737,16 @@ public class Banner<T, VH extends RecyclerView.ViewHolder> extends FrameLayout i
     public @interface Orientation {
     }
 
-    static class AutoLoopTask<T, VH extends RecyclerView.ViewHolder> implements Runnable {
-        private final WeakReference<Banner<T, VH>> reference;
+    static class AutoLoopTask implements Runnable {
+        private final WeakReference<Banner> reference;
 
-        AutoLoopTask(Banner<T, VH> banner) {
+        AutoLoopTask(Banner banner) {
             this.reference = new WeakReference<>(banner);
         }
 
         @Override
         public void run() {
-            Banner<T, VH> banner = reference.get();
+            Banner banner = reference.get();
             if (banner != null && banner.mIsAutoLoop) {
                 int count = banner.getItemCount();
                 if (count == 0) {

@@ -3,20 +3,14 @@ package com.youth.banner.util;
 import android.content.res.Resources;
 import android.graphics.Outline;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
 
-@SuppressWarnings("unused")
 public class BannerUtils {
 
     /**
      * 获取真正的位置
-     *
      * @param isIncrease 首尾是否有增加
      * @param position   当前位置
      * @param realCount  真实数量
@@ -34,21 +28,6 @@ public class BannerUtils {
             realPosition = position - 1;
         }
         return realPosition;
-    }
-
-    /**
-     * 将布局文件转成view，这里为了适配viewpager2中高宽必须为match_parent
-     */
-    public static View getView(@NonNull ViewGroup parent, @LayoutRes int layoutId) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        //这里判断高度和宽带是否都是match_parent
-        if (params.height != -1 || params.width != -1) {
-            params.height = -1;
-            params.width = -1;
-            view.setLayoutParams(params);
-        }
-        return view;
     }
 
     public static int dp2px(float dp) {

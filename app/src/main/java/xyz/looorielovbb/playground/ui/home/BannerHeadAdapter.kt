@@ -1,6 +1,5 @@
 package xyz.looorielovbb.playground.ui.home
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
@@ -16,17 +15,16 @@ class BannerHeadAdapter(
     private val owner: LifecycleOwner
 ) :
     RecyclerView.Adapter<BannerHeadAdapter.BannerHeadViewHolder>() {
+
     lateinit var binding: LayoutBannerBinding
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BannerHeadViewHolder {
-        Log.e("TAG", "onCreateViewHolder: ")
         binding = LayoutBannerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         binding.banner.apply {
-            Log.e("TAG", "banner apply: ")
             addBannerLifecycleObserver(owner)
             setBannerRound(20f)
             indicator = CircleIndicator(parent.context)
             intercept = true
-            setAdapter(bannerAdapter)
+            adapter = bannerAdapter
             //添加魅族效果
             setBannerGalleryMZ(16)
             addPageTransformer(AlphaPageTransformer())
