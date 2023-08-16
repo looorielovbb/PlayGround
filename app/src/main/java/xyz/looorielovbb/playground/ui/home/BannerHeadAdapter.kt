@@ -40,7 +40,6 @@ class BannerHeadAdapter(
         return 1
     }
 
-
     class BannerHeadViewHolder(val binding: LayoutBannerBinding) :
         RecyclerView.ViewHolder(binding.root)
 
