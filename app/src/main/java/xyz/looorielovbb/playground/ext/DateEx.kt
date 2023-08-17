@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package xyz.looorielovbb.playground.ext
 
 import java.text.SimpleDateFormat
@@ -275,7 +277,7 @@ fun Long.toUTCDate(): Long {
  * @return Long
  */
 fun Long.toLocalDate(): Long {
-    val pattern = "yyyyMMddHHmmssSSS"
+    val pattern = "yyyy-MM-dd HH:mm:ss.SSS"
     val utcSdf = SimpleDateFormat(pattern, Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("UTC")
     }
@@ -294,7 +296,7 @@ fun Long.toLocalDate(): Long {
  * @return Long
  */
 fun Long.toCustomDate(timeZoneInt: Int): Long {
-    val pattern = "yyyyMMddHHmmssSSS"
+    val pattern = "yyyy-MM-dd HH:mm:ss.SSS"
     val utcSdf = SimpleDateFormat(pattern, Locale.getDefault()).apply {
         timeZone = TimeZone.getTimeZone("UTC")
     }

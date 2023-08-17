@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="UnusedResources">
     <color name="purple_200">#BB86FC</color>
     <color name="purple_500">#6200EE</color>
     <color name="purple_700">#3700B3</color>
@@ -7,7 +8,7 @@
 
     <color name="indigo_50">#E8EAF6</color>
     <color name="indigo_100">#C5CAE9</color>
-    <color name="indigo_200">#9FA8DA</color>
+    <color name="indigo_200" >#9FA8DA</color>
     <color name="indigo_300">#7986CB</color>
     <color name="indigo_400">#7986CB</color>
     <color name="indigo_500">#3F51B5</color>

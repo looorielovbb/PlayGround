@@ -67,12 +67,6 @@ class WebActivity : AppCompatActivity() {
                 setGeolocationEnabled(true)
                 domStorageEnabled = true
                 cacheMode = WebSettings.LOAD_DEFAULT
-                // 添加user-agent
-                /*userAgentString =
-                    "Mozilla/5.0 (Linux; Android 5.0; SM-N9100 Build/LRX21V) > " +
-                            "AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 > " +
-                            "Chrome/37.0.0.0 Mobile Safari/537.36 > " +
-                            "MicroMessenger/6.0.2.56_r958800.520 NetType/WIFI"*/
             }
             webView.loadUrl(link)
         }

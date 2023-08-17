@@ -914,17 +914,17 @@ public class Banner extends FrameLayout implements BannerLifecycleObserver {
     }
 
     @Override
-    public void onStart(LifecycleOwner owner) {
+    public void onStart() {
         start();
     }
 
     @Override
-    public void onStop(LifecycleOwner owner) {
+    public void onStop() {
         stop();
     }
 
     @Override
-    public void onDestroy(LifecycleOwner owner) {
+    public void onDestroy() {
         destroy();
     }
 

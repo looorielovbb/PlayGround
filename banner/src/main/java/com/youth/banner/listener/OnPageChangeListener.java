@@ -4,6 +4,7 @@ import androidx.annotation.Px;
 import androidx.viewpager2.widget.ViewPager2;
 
 
+/** @noinspection ALL*/
 public interface OnPageChangeListener {
     /**
      * This method will be invoked when the current page is scrolled, either as part

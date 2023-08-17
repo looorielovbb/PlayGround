@@ -11,12 +11,10 @@ import java.util.List;
 
 /**
  * 默认实现的图片适配器，图片加载需要自己实现
+ * @noinspection ALL
  */
 public abstract class BannerImageAdapter<T> extends BannerAdapter<T, BannerImageAdapter.BannerImageHolder> {
 
-    /**
-     * @noinspection unused
-     */
     public BannerImageAdapter(@NonNull List<T> mDatas) {
         super(mDatas);
     }

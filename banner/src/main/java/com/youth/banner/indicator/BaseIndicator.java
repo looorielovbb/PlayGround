@@ -17,7 +17,6 @@ import com.youth.banner.config.IndicatorConfig;
 public class BaseIndicator extends View implements Indicator {
     protected final IndicatorConfig config;
     protected final Paint mPaint;
-    protected float offset;
 
     public BaseIndicator(Context context) {
         this(context, null);
@@ -76,9 +75,7 @@ public class BaseIndicator extends View implements Indicator {
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        offset = positionOffset;
         invalidate();
-
     }
 
     @Override

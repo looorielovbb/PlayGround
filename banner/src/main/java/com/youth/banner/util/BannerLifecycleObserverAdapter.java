@@ -8,26 +8,24 @@ import androidx.lifecycle.OnLifecycleEvent;
 @SuppressWarnings("unused")
 public class BannerLifecycleObserverAdapter implements LifecycleObserver {
     private final BannerLifecycleObserver mObserver;
-    private final LifecycleOwner mLifecycleOwner;
 
     public BannerLifecycleObserverAdapter(LifecycleOwner lifecycleOwner, BannerLifecycleObserver observer) {
-        mLifecycleOwner = lifecycleOwner;
         mObserver = observer;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onStart() {
-        mObserver.onStart(mLifecycleOwner);
+        mObserver.onStart();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onStop() {
-        mObserver.onStop(mLifecycleOwner);
+        mObserver.onStop();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onDestroy() {
-        mObserver.onDestroy(mLifecycleOwner);
+        mObserver.onDestroy();
     }
 
 }
