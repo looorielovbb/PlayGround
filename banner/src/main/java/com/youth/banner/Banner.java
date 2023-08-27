@@ -897,7 +897,6 @@ public class Banner extends FrameLayout implements BannerLifecycleObserver {
             getIndicatorConfig().setRadius(indicatorRadius);
         }
     }
-
     public void setIndicatorHeight(int indicatorHeight) {
         if (getIndicatorConfig() != null) {
             getIndicatorConfig().setHeight(indicatorHeight);

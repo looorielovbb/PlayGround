@@ -8,7 +8,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.data.remote.WanRepository
 import xyz.looorielovbb.playground.pojo.BannerData
@@ -26,9 +25,6 @@ class HomeViewModel @Inject constructor(private val wanRepository: WanRepository
         wanRepository.fetchBanner()
             .catch {
                 bannerData.value = HomeState.Failure(it)
-            }
-            .mapNotNull {
-                it
             }
             .collect {
                 bannerData.value = HomeState.Success(it)
