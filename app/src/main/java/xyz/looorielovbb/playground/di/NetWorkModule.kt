@@ -22,7 +22,7 @@ class NetWorkModule {
     fun bindClient(): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(HttpLoggingInterceptor().apply {
-                setLevel(HttpLoggingInterceptor.Level.BASIC)
+                setLevel(HttpLoggingInterceptor.Level.BODY)
             })
             .build()
 
