@@ -1,8 +1,8 @@
 package xyz.looorielovbb.playground.data.local
 
 import androidx.room.TypeConverter
-import xyz.looorielovbb.playground.utils.MoshiEx
 import xyz.looorielovbb.playground.pojo.Tag
+import xyz.looorielovbb.playground.utils.MoshiEx
 
 class Converters {
 
