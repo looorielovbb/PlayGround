@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.onStart
 import xyz.looorielovbb.playground.pojo.Article
 import xyz.looorielovbb.playground.pojo.BannerData
 import javax.inject.Inject
@@ -23,8 +24,11 @@ class WanRepository @Inject constructor(
 
     fun fetchBanner(): Flow<List<BannerData>> {
         return flow {
+            wanApiService.getBanner()
             val list = wanApiService.getBanner().data
             emit(list)
+        }.onStart {
+
         }.flowOn(Dispatchers.IO)
     }
 

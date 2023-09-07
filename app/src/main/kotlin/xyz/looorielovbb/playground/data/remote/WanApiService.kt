@@ -7,7 +7,7 @@ import xyz.looorielovbb.playground.pojo.Article
 import xyz.looorielovbb.playground.pojo.BannerData
 import xyz.looorielovbb.playground.pojo.Hotkey
 import xyz.looorielovbb.playground.pojo.LR
-import xyz.looorielovbb.playground.pojo.RP
+import xyz.looorielovbb.playground.pojo.Resp
 
 interface WanApiService {
     companion object {
@@ -21,19 +21,19 @@ interface WanApiService {
     suspend fun getArticles(
         @Path("page") page: Int,
         @Query("page_size") pageSize: Int
-    ): RP<LR<Article>>
+    ): Resp<LR<Article>>
 
     /**
      * 首页banner
      */
     @GET("banner/json")
-    suspend fun getBanner(): RP<List<BannerData>>
+    suspend fun getBanner(): Resp<List<BannerData>>
 
     /**
      * 搜索热词 https://www.wanandroid.com/hotkey/json
      * 数据类型
      */
     @GET("hotkey/json")
-    suspend fun getHotKey(): RP<List<Hotkey>>
+    suspend fun getHotKey(): Resp<List<Hotkey>>
 
 }
