@@ -1,3 +1,4 @@
+[![Android CI](https://github.com/looorielovbb/PlayGround/actions/workflows/android.yml/badge.svg)](https://github.com/looorielovbb/PlayGround/actions/workflows/android.yml)
 # PlayGround/操练场
 - 这是一个练手Android项目，目前涉及的知识点有Android Jetpack多个组件，
   如分页组件Paging3，数据库组件Room，生命周期监听组件lifecycle，依赖注入组件Hilt，文件存储datastore
