@@ -35,10 +35,10 @@ class HomeDelegateAdapter : BindingViewDelegate<Article, ItemArticleBinding>(
     companion object {
         private val diffCallback = object : DiffUtil.ItemCallback<Article>() {
             override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem.id == newItem.id
+                oldItem.link == newItem.link
 
             override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem == newItem
+                oldItem.link == newItem.link
         }
     }
 }

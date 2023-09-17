@@ -7,33 +7,32 @@ import retrofit2.HttpException
 import xyz.looorielovbb.playground.pojo.Article
 import java.io.IOException
 
-private const val STARTING_PAGE_INDEX = 0
 
 class ArticlesPagingSource(
     private val wanApiService: WanApiService,
 ) : PagingSource<Int, Article>() {
 
-    companion object{
-        const val TAG= "ArticlesPagingSource"
+    companion object {
+        const val TAG = "ArticlesPagingSource"
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
-        val nextPageNumber = params.key ?: STARTING_PAGE_INDEX
+        val nextPage = params.key ?: 0
         return try {
-            val response = wanApiService.getArticles(nextPageNumber, params.loadSize)
+            val response = wanApiService.getArticles(nextPage, params.loadSize)
             val articles = response.data.datas
             LoadResult.Page(
                 data = articles,
-                prevKey = if (nextPageNumber == STARTING_PAGE_INDEX) null else nextPageNumber - 1,
-                nextKey = if (nextPageNumber == response.data.total) null else nextPageNumber + 1
+                prevKey = if (nextPage == 0) null else nextPage - 1,
+                nextKey = if (nextPage == response.data.total) null else nextPage + 1
             )
         } catch (e: IOException) {
             // IOException for network failures.
-            Log.e(TAG, "load: ",e)
+            Log.e(TAG, "load: ", e)
             return LoadResult.Error(e)
         } catch (e: HttpException) {
             // HttpException for any non-2xx HTTP status codes.
-            Log.e(TAG, "load: ",e)
+            Log.e(TAG, "load: ", e)
             return LoadResult.Error(e)
         }
     }

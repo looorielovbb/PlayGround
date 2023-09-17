@@ -4,19 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import xyz.looorielovbb.playground.data.remote.WanRepository
+import xyz.looorielovbb.playground.data.WanRepository
 import xyz.looorielovbb.playground.pojo.BannerData
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(private val wanRepository: WanRepository) : ViewModel() {
 
-    val articlesFlow = wanRepository.fetchArticles().flowOn(Dispatchers.IO).cachedIn(viewModelScope)
+    val articlesFlow = wanRepository.fetchArticles().cachedIn(viewModelScope)
 
     val bannerData: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Loading)
 

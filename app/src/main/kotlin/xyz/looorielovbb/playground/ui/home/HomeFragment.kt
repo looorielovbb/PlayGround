@@ -80,6 +80,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.fetchBannerData()
                 launch {
                     pagingAdapter.loadStateFlow.collectLatest {
                         when (it.refresh) {
@@ -90,7 +91,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
                 launch {
-                    viewModel.articlesFlow.collectLatest(pagingAdapter::submitData)
+                    viewModel.articlesFlow.collectLatest {
+                        pagingAdapter.submitData(it)
+                    }
                 }
                 launch {
                     viewModel.bannerData.collectLatest { state ->
@@ -113,7 +116,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
-        viewModel.fetchBannerData()
     }
 
 }

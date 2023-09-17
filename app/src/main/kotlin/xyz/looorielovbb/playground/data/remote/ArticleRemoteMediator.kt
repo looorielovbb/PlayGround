@@ -9,10 +9,9 @@ import retrofit2.HttpException
 import xyz.looorielovbb.playground.data.local.AppDatabase
 import xyz.looorielovbb.playground.pojo.Article
 import java.io.IOException
-import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class ArticleRemoteMediator @Inject constructor(
+class ArticleRemoteMediator constructor(
     private val db: AppDatabase,
     private val wanApiService: WanApiService
 ) : RemoteMediator<Int, Article>() {
@@ -23,10 +22,12 @@ class ArticleRemoteMediator @Inject constructor(
     ): MediatorResult {
         return try {
             val loadKey = when (loadType) {
+                // 首次访问 或者调用 PagingDataAdapter.refresh()
                 LoadType.REFRESH -> null
+                // 在当前加载的数据集的开头加载数据时
                 LoadType.PREPEND ->
                     return MediatorResult.Success(endOfPaginationReached = true)
-
+                // 下来加载更多时触发
                 LoadType.APPEND -> {
                     state.lastItemOrNull()
                         ?: return MediatorResult.Success(
@@ -55,4 +56,13 @@ class ArticleRemoteMediator @Inject constructor(
             MediatorResult.Error(e)
         }
     }
+
+    /* override suspend fun initialize(): InitializeAction {
+         val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
+         return if (System.currentTimeMillis() - db.lastUpdated() <= cacheTimeout) {
+             InitializeAction.SKIP_INITIAL_REFRESH
+         } else {
+             InitializeAction.LAUNCH_INITIAL_REFRESH
+         }
+     }*/
 }
