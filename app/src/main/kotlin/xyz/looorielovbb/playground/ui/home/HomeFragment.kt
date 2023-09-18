@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.youth.banner.adapter.BannerImageAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
@@ -82,7 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.fetchBannerData()
                 launch {
-                    pagingAdapter.loadStateFlow.collectLatest {
+                    pagingAdapter.loadStateFlow.collect {
                         when (it.refresh) {
                             is LoadState.Loading -> binding.swiper.isRefreshing = true
                             is LoadState.Error -> binding.swiper.isRefreshing = false
@@ -91,23 +90,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
                 launch {
-                    viewModel.articlesFlow.collectLatest {
+                    viewModel.articlesFlow.collect {
                         pagingAdapter.submitData(it)
                     }
                 }
                 launch {
-                    viewModel.bannerData.collectLatest { state ->
+                    viewModel.bannerData.collect { state ->
                         when (state) {
                             is HomeState.Loading -> {
-                                binding.swiper.isRefreshing = true
+//                                binding.swiper.isRefreshing = true
                             }
 
                             is HomeState.Failure -> {
-                                binding.swiper.isRefreshing = false
+//                                binding.swiper.isRefreshing = false
                             }
 
                             is HomeState.Success -> {
-                                binding.swiper.isRefreshing = false
+//                                binding.swiper.isRefreshing = false
                                 val listData: List<BannerData> = state.data
                                 bannerAdapter.setDatas(listData)
                             }

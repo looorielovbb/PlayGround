@@ -12,13 +12,13 @@ import xyz.looorielovbb.playground.pojo.Article
 interface ArticleDao {
 
     @Query("SELECT * FROM articles")
-    fun getAllArticles():Flow<List<Article>>
+    fun getAllArticles(): Flow<List<Article>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertArticle(article: Article)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(list:List<Article>)
+    suspend fun insertAll(list: List<Article>)
 
     @Query("SELECT * FROM articles WHERE id = :id")
     fun articlePagingSource(id: Int): PagingSource<Int, Article>
@@ -28,4 +28,7 @@ interface ArticleDao {
 
     @Query("DELETE FROM articles")
     suspend fun clearAllArticles()
+
+    @Query("SELECT * FROM articles")
+    fun getCachedArticles(): PagingSource<Int, Article>
 }

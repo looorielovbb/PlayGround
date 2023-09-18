@@ -1,3 +1,4 @@
+@file:Suppress("unused")
 package xyz.looorielovbb.playground.data.remote
 
 import android.util.Log
@@ -23,16 +24,16 @@ class ArticlesPagingSource(
             val articles = response.data.datas
             LoadResult.Page(
                 data = articles,
-                prevKey = if (nextPage == 0) null else nextPage - 1,
-                nextKey = if (nextPage == response.data.total) null else nextPage + 1
+                prevKey = null,
+                nextKey = nextPage
             )
         } catch (e: IOException) {
             // IOException for network failures.
-            Log.e(TAG, "load: ", e)
+            Log.e(TAG, e.message, e.cause)
             return LoadResult.Error(e)
         } catch (e: HttpException) {
             // HttpException for any non-2xx HTTP status codes.
-            Log.e(TAG, "load: ", e)
+            Log.e(TAG, e.message(), e.fillInStackTrace())
             return LoadResult.Error(e)
         }
     }

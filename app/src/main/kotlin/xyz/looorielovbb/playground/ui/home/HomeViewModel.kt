@@ -18,15 +18,16 @@ class HomeViewModel @Inject constructor(private val wanRepository: WanRepository
 
     val bannerData: MutableStateFlow<HomeState> = MutableStateFlow(HomeState.Loading)
 
-    fun fetchBannerData() = viewModelScope.launch {
-        bannerData.value = HomeState.Loading
-        wanRepository.fetchBanner()
-            .catch {
-                bannerData.value = HomeState.Failure(it)
-            }
-            .collect {
-                bannerData.value = HomeState.Success(it)
-            }
+    fun fetchBannerData() {
+        viewModelScope.launch {
+            wanRepository.fetchBanner()
+                .catch {
+                    bannerData.value = HomeState.Failure(it)
+                }
+                .collect {
+                    bannerData.value = HomeState.Success(it)
+                }
+        }
     }
 
 }

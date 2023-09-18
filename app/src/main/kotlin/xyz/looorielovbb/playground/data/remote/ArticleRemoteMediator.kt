@@ -12,8 +12,8 @@ import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
 class ArticleRemoteMediator constructor(
+    private val wanApiService: WanApiService,
     private val db: AppDatabase,
-    private val wanApiService: WanApiService
 ) : RemoteMediator<Int, Article>() {
 
     override suspend fun load(

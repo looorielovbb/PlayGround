@@ -1,11 +1,9 @@
 package xyz.looorielovbb.playground.pojo
 
 import androidx.room.Entity
-import androidx.room.PrimaryKey
 
 @Entity(tableName = "articles")
 data class Article constructor(
-    @PrimaryKey
     val id: Int,
     val adminAdd: Boolean,
     val apkLink: String,
