@@ -1,14 +1,12 @@
 package xyz.looorielovbb.playground.ui.home
 
 import android.content.Intent
-import androidx.recyclerview.widget.DiffUtil
 import xyz.looorielovbb.playground.databinding.ItemArticleBinding
-import xyz.looorielovbb.playground.ext.toDateStr
 import xyz.looorielovbb.playground.pojo.Article
 import xyz.looorielovbb.playground.ui.home.detail.WebActivity
 
 class HomeDelegateAdapter : BindingViewDelegate<Article, ItemArticleBinding>(
-    ItemArticleBinding::inflate, diffCallback = diffCallback
+    ItemArticleBinding::inflate, diffCallback = Article.diffCallback
 ) {
 
     override fun onBindViewHolder(position: Int) {
@@ -23,7 +21,7 @@ class HomeDelegateAdapter : BindingViewDelegate<Article, ItemArticleBinding>(
                 }
                 title.text = article.title
                 publishAt.text =
-                    String.format("发布时间:%s", article.publishTime.toDateStr("yyyy-MM-dd"))
+                    String.format("发布时间:%s", article.niceShareDate)
                 author.text =
                     String.format(
                         leftTitle,
@@ -32,13 +30,5 @@ class HomeDelegateAdapter : BindingViewDelegate<Article, ItemArticleBinding>(
         }
     }
 
-    companion object {
-        private val diffCallback = object : DiffUtil.ItemCallback<Article>() {
-            override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem.link == newItem.link
 
-            override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem.link == newItem.link
-        }
-    }
 }

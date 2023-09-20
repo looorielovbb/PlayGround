@@ -1,10 +1,14 @@
 package xyz.looorielovbb.playground.pojo
 
+import android.os.Parcelable
+import androidx.recyclerview.widget.DiffUtil
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "articles")
-data class Article constructor(
+@Parcelize
+data class Article(
     @PrimaryKey
     val id: Int,
     val adminAdd: Boolean,
@@ -40,8 +44,20 @@ data class Article constructor(
     val visible: Int,
     val zan: Int,
     val tags: List<Tag>
-)
+) : Parcelable {
+    companion object {
+        val diffCallback = object : DiffUtil.ItemCallback<Article>() {
+            override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean =
+                oldItem.id == newItem.id
+
+            override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
+                oldItem == newItem
+        }
+    }
+}
+
+@Parcelize
 data class Tag(
     val name: String,
     val url: String
-)
+) : Parcelable

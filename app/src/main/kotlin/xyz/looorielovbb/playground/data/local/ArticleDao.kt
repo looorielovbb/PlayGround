@@ -29,6 +29,6 @@ interface ArticleDao {
     @Query("DELETE FROM articles")
     suspend fun clearAllArticles()
 
-    @Query("SELECT * FROM articles")
+    @Query("SELECT * FROM articles ORDER BY id DESC")
     fun getCachedArticles(): PagingSource<Int, Article>
 }

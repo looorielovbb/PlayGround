@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.youth.banner.adapter.BannerImageAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import xyz.looorielovbb.playground.R
 import xyz.looorielovbb.playground.databinding.FragmentHomeBinding
@@ -90,7 +91,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
                 launch {
-                    viewModel.articlesFlow.collect {
+                    viewModel.articlesFlow.collectLatest {
                         pagingAdapter.submitData(it)
                     }
                 }

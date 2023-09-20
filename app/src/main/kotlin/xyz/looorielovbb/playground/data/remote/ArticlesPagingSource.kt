@@ -18,14 +18,15 @@ class ArticlesPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
-        val nextPage = params.key ?: 0
+        val page = params.key ?: 0
         return try {
-            val response = wanApiService.getArticles(nextPage, params.loadSize)
+            val response = wanApiService.getArticles(page, params.loadSize)
             val articles = response.data.datas
+
             LoadResult.Page(
                 data = articles,
-                prevKey = null,
-                nextKey = nextPage
+                prevKey = if (page == 0) null else page - 1,
+                nextKey = if (page == response.data.pageCount - 1) null else page + 1
             )
         } catch (e: IOException) {
             // IOException for network failures.
