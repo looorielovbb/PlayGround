@@ -86,6 +86,5 @@ public class BaseIndicator extends View implements Indicator {
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
     }
 }

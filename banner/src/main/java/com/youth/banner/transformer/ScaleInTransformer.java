@@ -30,8 +30,7 @@ public class ScaleInTransformer extends BasePageTransformer {
             view.setPivotX(pageWidth);
         } else if (position <= 1) { // [-1,1]
             // Modify the default slide transition to shrink the page as well
-            if (position < 0) //1-2:1[0,-1] ;2-1:1[-1,0]
-            {
+            if (position < 0) {
 
                 float scaleFactor = (1 + position) * (1 - mMinScale) + mMinScale;
                 view.setScaleX(scaleFactor);
@@ -39,8 +38,7 @@ public class ScaleInTransformer extends BasePageTransformer {
 
                 view.setPivotX(pageWidth * (DEFAULT_CENTER + (DEFAULT_CENTER * -position)));
 
-            } else //1-2:2[1,0] ;2-1:2[0,1]
-            {
+            } else {
                 float scaleFactor = (1 - position) * (1 - mMinScale) + mMinScale;
                 view.setScaleX(scaleFactor);
                 view.setScaleY(scaleFactor);

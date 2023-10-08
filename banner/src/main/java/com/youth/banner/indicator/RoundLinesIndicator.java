@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class RoundLinesIndicator extends BaseIndicator {
@@ -37,7 +38,7 @@ public class RoundLinesIndicator extends BaseIndicator {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         int count = config.getIndicatorSize();
         if (count <= 1) return;

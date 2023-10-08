@@ -109,7 +109,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                             is HomeState.Success -> {
 //                                binding.swiper.isRefreshing = false
                                 val listData: List<BannerData> = state.data
-                                bannerAdapter.setDatas(listData)
+                                bannerAdapter.setData(listData)
                             }
                         }
                     }

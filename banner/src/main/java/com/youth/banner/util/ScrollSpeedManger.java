@@ -41,15 +41,11 @@ public class ScrollSpeedManger extends LinearLayoutManager {
                 return;
             }
             recyclerView.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
-
             ScrollSpeedManger speedManger = new ScrollSpeedManger(banner, (LinearLayoutManager) recyclerView.getLayoutManager());
             recyclerView.setLayoutManager(speedManger);
-
-
             Field LayoutMangerField = ViewPager2.class.getDeclaredField("mLayoutManager");
             LayoutMangerField.setAccessible(true);
             LayoutMangerField.set(viewPager2, speedManger);
-
             Field pageTransformerAdapterField = ViewPager2.class.getDeclaredField("mPageTransformerAdapter");
             pageTransformerAdapterField.setAccessible(true);
             Object mPageTransformerAdapter = pageTransformerAdapterField.get(viewPager2);
@@ -72,5 +68,4 @@ public class ScrollSpeedManger extends LinearLayoutManager {
             e.printStackTrace();
         }
     }
-
 }

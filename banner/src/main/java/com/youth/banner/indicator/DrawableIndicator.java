@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
 
 import com.youth.banner.R;
 
@@ -59,7 +60,7 @@ public class DrawableIndicator extends BaseIndicator {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         int count = config.getIndicatorSize();
         if (count <= 1 || normalBitmap == null || selectedBitmap == null) {

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 
+import androidx.annotation.NonNull;
+
 /**
  * 圆形指示器
  * 如果想要大小一样，可以将选中和默认设置成同样大小
@@ -45,7 +47,7 @@ public class CircleIndicator extends BaseIndicator {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         int count = config.getIndicatorSize();
         if (count <= 1) {

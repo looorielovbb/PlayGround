@@ -19,7 +19,6 @@ public class RotateYTransformer extends BasePageTransformer {
     @Override
     public void transformPage(@NonNull View view, float position) {
         view.setPivotY(view.getHeight() >> 1);
-
         if (position < -1) { // [-Infinity,-1)
             // This page is way off-screen to the left.
             view.setRotationY(-1 * mMaxRotate);
@@ -27,7 +26,6 @@ public class RotateYTransformer extends BasePageTransformer {
         } else if (position <= 1) { // [-1,1]
             // Modify the default slide transition to shrink the page as well
             view.setRotationY(position * mMaxRotate);
-
             //[0,-1]
             if (position < 0) {
                 view.setPivotX(view.getWidth() * (DEFAULT_CENTER + DEFAULT_CENTER * (-position)));
@@ -36,7 +34,6 @@ public class RotateYTransformer extends BasePageTransformer {
                 view.setPivotX(view.getWidth() * DEFAULT_CENTER * (1 - position));
                 view.setPivotX(0);
             }
-
             // Scale the page down (between MIN_SCALE and 1)
         } else {
             // (1,+Infinity]

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-    protected final List<T> mDatas = new ArrayList<>();
+    protected final List<T> mData = new ArrayList<>();
     private int mIncreaseCount = BannerConfig.INCREASE_COUNT;
 
-    public BannerAdapter(@NonNull List<T> datas) {
-        setDatas(datas);
+    public BannerAdapter(@NonNull List<T> data) {
+        setData(data);
     }
 
     public BannerAdapter() {
@@ -25,24 +25,23 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
     /**
      * 设置实体集合（可以在自己的adapter自定义，不一定非要使用）
      */
-    public void setDatas(@NonNull List<T> datas) {
-        int lengthOld = mDatas.size();
-        if (datas.isEmpty()) {
-            mDatas.clear();
+    public void setData(@NonNull List<T> data) {
+        int lengthOld = mData.size();
+        if (data.isEmpty()) {
+            mData.clear();
             notifyItemRangeRemoved(0, lengthOld);
         } else {
-            mDatas.addAll(datas);
-            notifyItemRangeInserted(0, datas.size());
+            mData.addAll(data);
+            notifyItemRangeInserted(0, data.size());
         }
     }
 
     /**
      * 获取指定的实体
-     *
      * @param position 这里传的position非实际图片位置，在无线循环时需要转换
      */
     public T getBannerData(int position) {
-        return mDatas.get(getBannerPosition(position));
+        return mData.get(getBannerPosition(position));
     }
 
     @Override
@@ -51,14 +50,14 @@ public abstract class BannerAdapter<T, VH extends RecyclerView.ViewHolder> exten
     }
 
     public int getBannerCount() {
-        return mDatas.size();
+        return mData.size();
     }
 
     /**
      * @noinspection unused
      */
-    public List<T> getDatas() {
-        return mDatas;
+    public List<T> getData() {
+        return mData;
     }
 
     public int getBannerPosition(int position) {
