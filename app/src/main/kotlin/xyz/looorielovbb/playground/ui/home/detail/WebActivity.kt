@@ -6,7 +6,6 @@ import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.net.http.SslError
-import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
@@ -19,7 +18,7 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
-import android.window.OnBackInvokedDispatcher
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import xyz.looorielovbb.playground.databinding.ActivityWebBinding
 import xyz.looorielovbb.playground.ext.binding
@@ -70,13 +69,11 @@ class WebActivity : AppCompatActivity() {
             }
             webView.loadUrl(link)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            onBackInvokedDispatcher.registerOnBackInvokedCallback(OnBackInvokedDispatcher.PRIORITY_DEFAULT) {
-                if (binding.webView.canGoBack()) {
-                    binding.webView.goBack()
-                } else {
-                    finish()
-                }
+        onBackPressedDispatcher.addCallback {
+            if (binding.webView.canGoBack()) {
+                binding.webView.goBack()
+            } else {
+                finish()
             }
         }
     }
@@ -186,15 +183,6 @@ class WebActivity : AppCompatActivity() {
             else ->{
                 Log.e(TAG, "wrong requestCode")
             }
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (binding.webView.canGoBack()) {
-            binding.webView.goBack()
-        } else {
-            finish()
         }
     }
 
