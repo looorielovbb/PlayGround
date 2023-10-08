@@ -15,25 +15,25 @@ class ArticlesPagingSource(
 
     companion object {
         const val TAG = "ArticlesPagingSource"
+        const val DEFAULT_PAGE_SIZE: Int = 50
+        const val DEFAULT_PAGE_INDEX = 0
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
-        val page = params.key ?: 0
+        val page = params.key ?: DEFAULT_PAGE_INDEX
         return try {
             val response = wanApiService.getArticles(page, params.loadSize)
             val articles = response.data.datas
 
             LoadResult.Page(
                 data = articles,
-                prevKey = if (page == 0) null else page - 1,
+                prevKey = if (page == DEFAULT_PAGE_INDEX) null else page - 1,
                 nextKey = if (page == response.data.pageCount - 1) null else page + 1
             )
         } catch (e: IOException) {
-            // IOException for network failures.
             Log.e(TAG, e.message, e.cause)
             return LoadResult.Error(e)
         } catch (e: HttpException) {
-            // HttpException for any non-2xx HTTP status codes.
             Log.e(TAG, e.message(), e.fillInStackTrace())
             return LoadResult.Error(e)
         }

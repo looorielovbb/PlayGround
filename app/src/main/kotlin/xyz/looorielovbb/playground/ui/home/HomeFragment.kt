@@ -29,7 +29,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private val binding by binding(FragmentHomeBinding::bind)
     private val viewModel by viewModels<HomeViewModel>()
-    private lateinit var pagingAdapter: HomeDelegateAdapter
+    private lateinit var pagingAdapter: HomePagingAdapter
     private lateinit var bannerAdapter: BannerImageAdapter<BannerData>
     private lateinit var headAdapter: BannerHeadAdapter
     private lateinit var concatAdapter: ConcatAdapter
@@ -72,7 +72,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
             concatAdapter = ConcatAdapter()
-            pagingAdapter = HomeDelegateAdapter()
+            pagingAdapter = HomePagingAdapter()
             headAdapter = BannerHeadAdapter(bannerAdapter, this@HomeFragment)
             concatAdapter.addAdapter(headAdapter)
             concatAdapter.addAdapter(pagingAdapter)
@@ -96,7 +96,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
                 launch {
-                    viewModel.bannerData.collect { state ->
+                    viewModel.bannerData.collectLatest{ state ->
                         when (state) {
                             is HomeState.Loading -> {
 //                                binding.swiper.isRefreshing = true

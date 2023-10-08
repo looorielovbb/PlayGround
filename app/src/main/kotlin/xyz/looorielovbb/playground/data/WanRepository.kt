@@ -16,9 +16,9 @@ class WanRepository @Inject constructor(
 ) {
     private val pagingConfig = PagingConfig(
         // 每页显示的数据的大小
-        pageSize = 10,
+        pageSize = ArticlesPagingSource.DEFAULT_PAGE_SIZE,
         // 开启占位符
-        enablePlaceholders = false,
+        enablePlaceholders = true,
         // 预刷新的距离，距离最后一个 item 多远时加载数据
         // 默认为 pageSize
         prefetchDistance = 2,
@@ -36,7 +36,7 @@ class WanRepository @Inject constructor(
         return Pager(
             config = pagingConfig,
             pagingSourceFactory = { ArticlesPagingSource(api) },
-            initialKey = 0,
+            initialKey = ArticlesPagingSource.DEFAULT_PAGE_INDEX,
         ).flow
 
     }

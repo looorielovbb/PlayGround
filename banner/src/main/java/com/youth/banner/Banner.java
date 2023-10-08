@@ -405,7 +405,6 @@ public class Banner extends FrameLayout implements BannerLifecycleObserver {
                 getIndicator().onPageScrollStateChanged(state);
             }
         }
-
     }
 
     public BannerAdapter<?, ? extends RecyclerView.ViewHolder> getAdapter() {
@@ -831,7 +830,6 @@ public class Banner extends FrameLayout implements BannerLifecycleObserver {
         this.mIndicator = indicator;
         initIndicator();
     }
-
 
     public void setIndicatorSelectedColor(@ColorInt int color) {
         if (getIndicatorConfig() != null) {

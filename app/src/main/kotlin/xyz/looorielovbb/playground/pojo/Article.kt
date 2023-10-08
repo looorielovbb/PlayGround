@@ -51,7 +51,11 @@ data class Article(
                 oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean =
-                oldItem == newItem
+                oldItem.title == newItem.title
+
+            override fun getChangePayload(oldItem: Article, newItem: Article): Any {
+                return oldItem
+            }
         }
     }
 }
