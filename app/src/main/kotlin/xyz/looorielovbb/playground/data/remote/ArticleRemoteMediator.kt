@@ -37,7 +37,7 @@ class ArticleRemoteMediator constructor(
                 }
             }
             val response = wanApiService.getArticles(
-                page = loadKey ?: 0, pageSize = state.config.pageSize
+                page = loadKey ?: 0
             )
             val dao = db.articleDao()
             db.withTransaction {

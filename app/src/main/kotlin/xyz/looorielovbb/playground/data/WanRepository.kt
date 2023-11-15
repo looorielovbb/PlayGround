@@ -28,7 +28,7 @@ class WanRepository @Inject constructor(
          * internal const val DEFAULT_INITIAL_PAGE_MULTIPLIER = 3
          * val initialLoadSize: Int = pageSize * DEFAULT_INITIAL_PAGE_MULTIPLIER
          */
-        initialLoadSize = 10,
+        initialLoadSize = ArticlesPagingSource.DEFAULT_PAGE_SIZE,
     )
 
 
