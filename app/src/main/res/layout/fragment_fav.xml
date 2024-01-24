@@ -1,6 +1,5 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:banner="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,10 +7,10 @@
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="180dp"
-        banner:banner_auto_loop="true"
-        banner:banner_infinite_loop="true"
-        banner:banner_indicator_normal_color="@android:color/white"
-        banner:banner_indicator_selected_color="@color/purple_500"
+        app:banner_auto_loop="true"
+        app:banner_infinite_loop="true"
+        app:banner_indicator_normal_color="@android:color/white"
+        app:banner_indicator_selected_color="@color/purple_500"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.youth.banner.Banner
@@ -19,10 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_marginTop="20dp"
-        banner:banner_auto_loop="false"
-        banner:banner_infinite_loop="false"
-        banner:banner_indicator_normal_color="@android:color/white"
-        banner:banner_indicator_selected_color="@color/purple_500"
+        app:banner_auto_loop="false"
+        app:banner_infinite_loop="false"
+        app:banner_indicator_normal_color="@android:color/white"
+        app:banner_indicator_selected_color="@color/purple_500"
         app:layout_constraintTop_toBottomOf="@id/banner"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
