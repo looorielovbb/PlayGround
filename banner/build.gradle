@@ -16,18 +16,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-
-    lint {
-        checkReleaseBuilds false
-        abortOnError false
-    }
-
-    tasks.withType(JavaCompile).tap {
-        configureEach {
-            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
-        }
-    }
 }
 
 dependencies {
