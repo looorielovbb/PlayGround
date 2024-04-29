@@ -96,8 +96,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
                 launch {
-                    viewModel.bannerData.collectLatest{ state ->
-                        when (state) {
+                    viewModel.bannerData.collectLatest{
+                        when (it) {
                             is HomeState.Loading -> {
 //                                binding.swiper.isRefreshing = true
                             }
@@ -108,7 +108,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                             is HomeState.Success -> {
 //                                binding.swiper.isRefreshing = false
-                                val listData: List<BannerData> = state.data
+                                val listData: List<BannerData> = it.data
                                 bannerAdapter.setData(listData)
                             }
                         }
