@@ -60,19 +60,19 @@ android {
 
 dependencies {
     implementation project(path: ':banner')
-    implementation 'androidx.core:core-ktx:1.13.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    implementation 'androidx.fragment:fragment-ktx:1.7.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     //data Store
-    implementation 'androidx.datastore:datastore-preferences:1.1.0'
+    implementation 'androidx.datastore:datastore-preferences:1.1.1'
 
     //google material
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'com.google.android.material:material:1.12.0'
 
     def hilt = "2.51.1"
     //dagger-hilt
@@ -86,7 +86,7 @@ dependencies {
     implementation "androidx.room:room-ktx:$room_version"
     //paging3
     implementation "androidx.room:room-paging:$room_version"
-    implementation 'androidx.paging:paging-runtime-ktx:3.2.1'
+    implementation 'androidx.paging:paging-runtime-ktx:3.3.0'
 
     def retrofit = '2.11.0'
     //noinspection GradleDependency
@@ -100,7 +100,7 @@ dependencies {
     ksp "com.squareup.moshi:moshi-kotlin-codegen:$moshi"
 
     //Kotlinx Coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1'
 
     //Coil图片加载
     def coil = '2.6.0'
